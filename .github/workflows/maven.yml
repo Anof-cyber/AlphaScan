@@ -21,19 +21,12 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Upload Artifact
+    - name: Push to Branch
       if: success()  # Only runs if the previous step (build) was successful
-      uses: actions/upload-artifact@v2
-      with:
-        name: my-artifact
-        path: target/*.jar  # Modify this path based on your JAR file's location
-
-
-    - name: Push
-      uses: s0/git-publish-subdir-action@develop
-      env:
-          REPO: self
-          BRANCH: build # The branch name where you want to push the assets
-          FOLDER: .
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
-          MESSAGE: "Build: ({sha}) {msg}" # The commit message
+      run: |
+        git config --global user.email "github-actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git checkout -b build  # Create or switch to the 'build' branch
+        git add -f target/*.jar  # Add the JAR file to the staging area
+        git commit -m "Add built JAR file"
+        git push origin build  # Push the changes to the 'build' branch
