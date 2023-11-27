@@ -21,20 +21,16 @@ jobs:
         if: success()
         run: |
           mkdir -p build-jar
-          shopt -s nullglob
-          jar_files=(target/*.jar)
-          if [ ${#jar_files[@]} -gt 0 ]; then
-            cp -f "${jar_files[@]}" build-jar/ || exit 1
-            cd build-jar || exit 1
+          cp -f target/*.jar build-jar/
+          cd build-jar
             
-            git init
-            git config --local user.email {{ secrets.email }}
-            git config --local user.name 'Anof-cyber'
-            git add .
-            git commit -m "Added Jar files"
-            git branch -M main
-            git remote add origin "https://github.com/${{ github.repository }}.git"
-            git push -u origin main
-          else
-            echo "No jar files found to copy."
+          git init
+          git config --local user.email {{ secrets.email }}
+          git config --local user.name 'Anof-cyber'
+          git add .
+          git commit -m "Added Jar files"
+          git branch -M main
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          git push -u origin main
+       
           fi
