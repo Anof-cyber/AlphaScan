@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs:
   build:
@@ -12,26 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Create Build Folder and Add/Replace JAR
-      if: success()  # Only runs if the previous step (build) was successful
-      run: |
-        mkdir -p build-jar  # Create 'build' directory if it doesn't exist
-        cp -f target/*.jar build-jar/  # Copy the JAR file to the 'build' directory, replacing if it already exists
 
-        cd build-jar
-        git init  # Initialize a Git repository within the 'build-jar' directory
-        git config --local user.email "github-actions@github.com"
-        git config --local user.name "GitHub Actions"
-        git add .  # Add the contents of the 'build-jar' directory
-        git commit -m "Update JAR file in build folder" || echo "No changes to commit"
-        git remote add origin "https://github.com/$GITHUB_REPOSITORY"  # Set the remote repository URL
-        git push --force "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" HEAD:refs/heads/main  # Push changes with token authentication
+    - name: Create build-jar directory and add JAR files
+      if: success()
+      steps:
+      - uses: actions/checkout@v3
+      - name: Pusg jar file
+      run: |
+        mkdir -p build-jar
+        cp -f target/*.jar build-jar/ || true
+        git config --global user.name 'Your Name'
+        git config --global user.email 'your-username@users.noreply.github.com'
+        git commit -am "Added Jar"
+        git push
+        
+    
+
