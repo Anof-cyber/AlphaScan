@@ -21,8 +21,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Change directory to the repository root
-        run: cd $GITHUB_WORKSPACE  # Moves to the repository root
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
@@ -30,8 +28,7 @@ jobs:
       - name: Create build-jar directory and add JAR files
         if: success()
         run: |
-          mkdir -p build-jar
-          cp -f target/*.jar build-jar/
+          cp -f target/*.jar jar/
           git config --global user.email "${{ secrets.email }}"
           git config --global user.name 'Anof-cyber'
           
