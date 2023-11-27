@@ -14,15 +14,15 @@ jobs:
 
       - name: List JAR files
         run: |
-          JAR_FILES=$(find ./jar -name '*.jar')
-          echo "$JAR_FILES" > jar_files.txt
+          find ./jar -name '*.jar' > jar_files.txt
 
       - name: Upload JARs to Release
-        run: |
-          while IFS= read -r line; do
-            echo "Uploading $line"
-            curl -sSL -H "Authorization: Bearer $GITHUB_TOKEN" -H "Content-Type: application/zip" --data-binary @"$line" "$UPLOAD_URL?name=$(basename $line)"
-          done < jar_files.txt
+        id: upload-release-assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./jar_files.txt
+          asset_name: jar_files.txt
+          asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          UPLOAD_URL: ${{ github.event.release.upload_url }}
