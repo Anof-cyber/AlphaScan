@@ -27,8 +27,12 @@ jobs:
         mkdir -p build-jar  # Create 'build' directory if it doesn't exist
         cp -f target/*.jar build-jar/  # Copy the JAR file to the 'build' directory, replacing if it already exists
 
-        git config --global user.email "github-actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add build-jar/  # Add the 'build' directory to the staging area
-        git commit -m "Update JAR file in build folder"
-        git push origin HEAD:main  # Push the changes to the same branch ('main' in this case)
+        cd build-jar
+        git init  # Initialize a Git repository within the 'build-jar' directory
+        git config --local user.email "github-actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add .  # Add the contents of the 'build-jar' directory
+        git status  # Check status for changes (for debug purposes)
+        git commit -m "Update JAR file in build folder" || echo "No changes to commit"
+        git remote add origin "$GITHUB_REPOSITORY"  # Set the remote repository URL
+        git push --force origin HEAD:refs/heads/main  # Push the changes to the 'main' branch
