@@ -21,11 +21,12 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Save artifact to workspace
+    - name: Upload Artifact
       if: success()  # Only runs if the previous step (build) was successful
-      run: |
-        mkdir -p $GITHUB_WORKSPACE/artifacts
-        cp target/*.jar $GITHUB_WORKSPACE/artifacts/my-artifact.jar
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: target/*.jar  # Modify this path based on your JAR file's location
 
   deploy:
     runs-on: ubuntu-latest
@@ -33,13 +34,19 @@ jobs:
     if: github.event_name == 'push' && github.event.action == 'push'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Push artifact to repository
-      uses: ad-m/github-push-action@master
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-        force: true
-        directory: artifacts
+        name: my-artifact
+        path: /tmp/my-artifact
+
+    - name: Move Artifact to Root
+      run: mv /tmp/my-artifact/target/*.jar ./
+
+    - name: Commit Artifact to Repository
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add .
+        git commit -m "Add generated JAR file"
+        git push
