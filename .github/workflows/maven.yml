@@ -32,7 +32,6 @@ jobs:
         git config --local user.email "github-actions@github.com"
         git config --local user.name "GitHub Actions"
         git add .  # Add the contents of the 'build-jar' directory
-        git status  # Check status for changes (for debug purposes)
         git commit -m "Update JAR file in build folder" || echo "No changes to commit"
-        git remote add origin "$GITHUB_REPOSITORY"  # Set the remote repository URL
+        git remote add origin "https://github.com/$GITHUB_REPOSITORY"  # Set the remote repository URL
         git push --force origin HEAD:refs/heads/main  # Push the changes to the 'main' branch
