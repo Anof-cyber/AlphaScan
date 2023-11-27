@@ -1,4 +1,4 @@
-name: Upload Release Asset
+name: Upload Release Assets
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Upload Release Assets
+    name: Upload JAR Files to Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,15 +14,16 @@ jobs:
 
       - name: List JAR files
         run: |
-          find ./jar -name '*.jar' > jar_files.txt
-
-      - name: Upload Release Assets
-        id: upload_release_assets
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./jar_files.txt
-          asset_name: jar_files.txt
-          asset_content_type: text/plain
+          jar_files=$(find ./jar -name '*.jar')
+          for file in $jar_files; do
+            echo "Uploading $file"
+            curl -sSL \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/java-archive" \
+              --data-binary @"$file" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${GITHUB_EVENT_RELEASE}/assets?name=$(basename "$file")"
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_RELEASE: ${{ github.event.release.id }}
