@@ -34,6 +34,7 @@ jobs:
           cp -f "${jar_files[@]}" build-jar/
           cd build-jar || exit 1
           git init
+          git push -u origin main
           git config --local user.email 'your-username@users.noreply.github.com'
           git config --local user.name 'Your Name'
           git add .
