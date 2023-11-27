@@ -21,21 +21,24 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
     - name: Create build-jar directory and add JAR files
       if: success()
       run: |
-        
         mkdir -p build-jar
-        
-        cp -f target/*.jar build-jar/ || true
-        git branch -u origin/main
-        
-        git config --global user.name 'Your Name'
-        git config --global user.email 'your-username@users.noreply.github.com'
-        git add .
-        git commit -m "Added Jar"
-        git push
+        shopt -s nullglob
+        jar_files=(target/*.jar)
+        if [ ${#jar_files[@]} -gt 0 ]; then
+          cp -f "${jar_files[@]}" build-jar/
+          cd build-jar || exit 1
+          git init
+          git config --local user.email 'your-username@users.noreply.github.com'
+          git config --local user.name 'Your Name'
+          git add .
+          git commit -m "Added Jar files"
+          git push --set-upstream origin main
+        else
+          echo "No jar files found to copy."
+        fi
