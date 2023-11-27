@@ -25,5 +25,5 @@ jobs:
       if: success()  # Only runs if the previous step (build) was successful
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: my-artifact.jar
         path: target/*release.jar  # Modify this path based on your JAR file's location
