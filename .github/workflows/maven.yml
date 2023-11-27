@@ -35,6 +35,7 @@ jobs:
           cd build-jar
             
           git init
+          git config --global init.defaultBranch mail
           git config --local user.email {{ secrets.email }}
           git config --local user.name 'Anof-cyber'
           git add .
