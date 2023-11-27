@@ -1,7 +1,6 @@
 package burp;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Low_Hanging implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
@@ -233,7 +232,6 @@ public class Low_Hanging implements IScannerCheck {
             MatchChecker matchChecker = new MatchChecker();
             List < int[] > matches = matchChecker.getMatches(updated_request_response.getRequest(), helper.stringToBytes("Content-Type: application/xml"), helper);
 
-            String updated_responsestring = helper.bytesToString(updated_request_response.getResponse());
 
             byte[] updated_response = updated_request_response.getResponse();
             int bodyOffset = updated_analysis_response.getBodyOffset();

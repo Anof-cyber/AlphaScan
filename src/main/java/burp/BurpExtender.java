@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 public class BurpExtender implements IBurpExtender {
     private Low_Hanging lowHangingScanner;
     private IExtensionHelpers helpers;
-     private PrintWriter stdout;
+    private PrintWriter stdout;
     private PrintWriter stderr;
     
     @Override

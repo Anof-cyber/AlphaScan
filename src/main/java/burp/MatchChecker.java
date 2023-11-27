@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatchChecker {
-    private IExtensionHelpers helper;
 
     public List<int[]> getMatches(byte[] response, byte[] match, IExtensionHelpers helper) {
         List<int[]> matches = new ArrayList<>();
