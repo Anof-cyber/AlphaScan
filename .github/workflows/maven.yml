@@ -32,9 +32,6 @@ jobs:
         run: |
           mkdir -p build-jar
           cp -f target/*.jar build-jar/
-          cd build-jar
-            
-          git init
           git config --global init.defaultBranch mail
           git config --local user.email {{ secrets.email }}
           git config --local user.name 'Anof-cyber'
