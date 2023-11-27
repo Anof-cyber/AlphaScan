@@ -1,29 +1,25 @@
+name: Publish
+
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - '*'
+
 jobs:
   build:
-    name: Upload Release Assets
+    name: Publish binaries
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: List JAR files
-        run: |
-          find ./jar -name '*.jar' > jar_files.txt
-  release:
-    runs-on: ubuntu-latest
-    needs: [build]
     steps:
-    - uses: actions/checkout@master
-    - name: Create release
-      uses: Roang-zero1/github-create-release-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload release artifacts
-      uses: Roang-zero1/github-upload-release-artifacts-action@v2
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --release
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        args: ./jar_files.txt
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./jar/*.jar
+        asset_name: release
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "This is my release text"
