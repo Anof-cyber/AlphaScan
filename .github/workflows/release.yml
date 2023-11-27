@@ -1,4 +1,4 @@
-name: Add Jars to Release
+name: Upload Release Asset
 
 on:
   release:
@@ -6,8 +6,8 @@ on:
 
 jobs:
   build:
+    name: Upload Release Assets
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,11 +16,22 @@ jobs:
         run: |
           find ./jar -name '*.jar' > jar_files.txt
 
-      - name: Upload JARs to Release
-        id: upload-release-assets
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets
+        id: upload_release_assets
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./jar_files.txt
           asset_name: jar_files.txt
           asset_content_type: text/plain
