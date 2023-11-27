@@ -31,7 +31,8 @@ jobs:
         git init  # Initialize a Git repository within the 'build-jar' directory
         git config --local user.email "github-actions@github.com"
         git config --local user.name "GitHub Actions"
-        git add .  # Add the contents of the 'build-jar' directory
         git commit -m "Update JAR file in build folder" || echo "No changes to commit"
         git remote add origin "https://github.com/$GITHUB_REPOSITORY"  # Set the remote repository URL
         git push --force origin HEAD:refs/heads/main  # Push the changes to the 'main' branch
+
+      
