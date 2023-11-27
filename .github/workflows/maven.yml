@@ -24,11 +24,11 @@ jobs:
     - name: Create Build Folder and Add/Replace JAR
       if: success()  # Only runs if the previous step (build) was successful
       run: |
-        mkdir -p build  # Create 'build' directory if it doesn't exist
-        cp -f target/*.jar build/  # Copy the JAR file to the 'build' directory, replacing if it already exists
+        mkdir -p build-jar  # Create 'build' directory if it doesn't exist
+        cp -f target/*.jar build-jar/  # Copy the JAR file to the 'build' directory, replacing if it already exists
 
         git config --global user.email "github-actions@github.com"
         git config --global user.name "GitHub Actions"
-        git add build/  # Add the 'build' directory to the staging area
+        git add build-jar/  # Add the 'build' directory to the staging area
         git commit -m "Update JAR file in build folder"
         git push origin HEAD:main  # Push the changes to the same branch ('main' in this case)
