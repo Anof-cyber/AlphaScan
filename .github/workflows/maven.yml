@@ -21,6 +21,9 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Change directory to the repository root
+      run: cd $GITHUB_WORKSPACE  # Moves to the repository root
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
@@ -31,12 +34,14 @@ jobs:
         shopt -s nullglob
         jar_files=(target/*.jar)
         if [ ${#jar_files[@]} -gt 0 ]; then
-          cp -f "${jar_files[@]}" build-jar/
-          cd build-jar || exit 1
+          cp -f "${jar_files[@]}" build-jar/ || exit 1
+          cd build-jar || exit 1  # Change directory to build-jar
           
+          git init
           git config --local user.email 'your-username@users.noreply.github.com'
-          git config --local user.name 'Action'
+          git config --local user.name 'Your Name'
           git add .
+          git status
           git commit -m "Added Jar files"
           git push origin main
         else
