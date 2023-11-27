@@ -35,8 +35,13 @@ jobs:
           git config --global user.email "${{ secrets.email }}"
           git config --global user.name 'Anof-cyber'
           
-          git add .
-          git commit -m "Added Jar files"
-          git branch -M main
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          git push -u origin main
+          # Check if there are any changes and then proceed with commit and push
+          if [[ $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Added Jar files"
+            git branch -M main
+            git remote add origin "https://github.com/${{ github.repository }}.git"
+            git push -u origin main
+          else
+            echo "No changes detected."
+          fi
