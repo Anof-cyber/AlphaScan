@@ -37,7 +37,6 @@ jobs:
             git add .
             git commit -m "Added Jar files"
             git branch -M main
-            git remote add origin "https://github.com/${{ github.repository }}.git"
             git push -u origin main
           else
             echo "No changes detected."
