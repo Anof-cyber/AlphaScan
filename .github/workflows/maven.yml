@@ -29,4 +29,5 @@ jobs:
         git checkout -b build  # Create or switch to the 'build' branch
         git add -f target/*.jar  # Add the JAR file to the staging area
         git commit -m "Add built JAR file"
+        git pull origin build --rebase  # Pull changes from the remote 'build' branch
         git push origin build  # Push the changes to the 'build' branch
