@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p build-jar
           cp -f target/*.jar build-jar/
-          git config --global user.email {{ secrets.email }}
+          git config --global user.email "${{ secrets.email }}"
           git config --global user.name 'Anof-cyber'
           
           git add .
@@ -40,5 +40,3 @@ jobs:
           git branch -M main
           git remote add origin "https://github.com/${{ github.repository }}.git"
           git push -u origin main
-       
-          fi
