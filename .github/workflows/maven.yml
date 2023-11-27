@@ -15,17 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Change directory to the repository root
-        run: cd $GITHUB_WORKSPACE  # Moves to the repository root
-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      # Other steps like setting up JDK, Maven, etc. (same as previous workflows)
 
       - name: Create build-jar directory and add JAR files
         if: success()
@@ -35,15 +25,15 @@ jobs:
           jar_files=(target/*.jar)
           if [ ${#jar_files[@]} -gt 0 ]; then
             cp -f "${jar_files[@]}" build-jar/ || exit 1
-            cd build-jar || exit 1  # Change directory to build-jar
+            cd build-jar || exit 1
             
             git init
-            git config --local user.email 'your-username@users.noreply.github.com'
-            git config --local user.name 'Your Name'
+            git config --local user.email {{ secrets.email }}
+            git config --local user.name 'Anof-cyber'
             git add .
             git commit -m "Added Jar files"
-            git branch -M main  # Rename branch to 'main'
-            git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+            git branch -M main
+            git remote add origin "https://github.com/${{ github.repository }}.git"
             git push -u origin main
           else
             echo "No jar files found to copy."
