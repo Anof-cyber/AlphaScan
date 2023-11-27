@@ -37,7 +37,7 @@ public class Low_Hanging implements IScannerCheck {
 
         if (existingIssue.getIssueName().equals(newIssue.getIssueName())) {
             
-            if (!newIssue.getIssueName().equals("VulnScan - XML Content Type Supported")) {
+            if (!newIssue.getIssueName().equals("AlphaScan - XML Content Type Supported")) {
                 if (existinghostname.equals(newhostname)) {
                 return -1;
             } else {
@@ -104,7 +104,7 @@ public class Low_Hanging implements IScannerCheck {
                     new IHttpRequestResponse[] {
                         base_pair
                     },
-                    "VulnScan - CSP Header Missing Required Directives",
+                    "AlphaScan - CSP Header Missing Required Directives",
                     "The CSP Header does not include the following required directives: <br><b>" + missing_directives_str + "</b>",
                     "Certain",
                     "Information"
@@ -119,7 +119,7 @@ public class Low_Hanging implements IScannerCheck {
                     new IHttpRequestResponse[] {
                         base_pair
                     },
-                    "VulnScan - CSP Header Contains Insecure Directives",
+                    "AlphaScan - CSP Header Contains Insecure Directives",
                     "The CSP Header includes insecure directives: <br><b>" + prohibited_directives_str + "</b>",
                     "Certain",
                     "Information"
@@ -132,7 +132,7 @@ public class Low_Hanging implements IScannerCheck {
                 new IHttpRequestResponse[] {
                     base_pair
                 },
-                "VulnScan - Missing CSP Header",
+                "AlphaScan - Missing CSP Header",
                 "<b>The CSP Header is missing</b>",
                 "Certain",
                 "Information"
@@ -155,7 +155,7 @@ public class Low_Hanging implements IScannerCheck {
                     new IHttpRequestResponse[] {
                         base_pair
                     },
-                    "VulnScan - Missing Strict-Transport-Security Header",
+                    "AlphaScan - Missing Strict-Transport-Security Header",
                     "The Strict-Transport-Security (HSTS) header is missing. HSTS ensures that the browser always communicates over HTTPS, mitigating risks associated with downgrade attacks and enhancing overall security.",
                     "Certain",
                     "Information"
@@ -179,7 +179,7 @@ public class Low_Hanging implements IScannerCheck {
                     new IHttpRequestResponse[] {
                         base_pair
                     },
-                    "VulnScan - Missing X-Frame-Options",
+                    "AlphaScan - Missing X-Frame-Options",
                     "The X-Frame-Options header is missing. This header is essential for preventing Clickjacking attacks by restricting the rendering of the page in a <frame>, <iframe>, <embed>, or <object>.",
                     "Certain",
                     "Information"
@@ -253,7 +253,7 @@ public class Low_Hanging implements IScannerCheck {
                         base_pair,
                         callbacks.applyMarkers(updated_request_response, matches, null)
                     },
-                    "VulnScan - XML Content Type Supported",
+                    "AlphaScan - XML Content Type Supported",
                     vulnerability_description,
                     "Tentative",
                     "Information"

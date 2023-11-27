@@ -15,7 +15,7 @@ public class BurpExtender implements IBurpExtender {
     
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
-        callbacks.setExtensionName("Vuln Scanner");
+        callbacks.setExtensionName("AlphaScan");
         callbacks.printOutput("Author: Sourav Kalal");
         callbacks.printOutput("Version 0.1");
         stdout = new PrintWriter(callbacks.getStdout(), true);
