@@ -28,10 +28,11 @@ jobs:
     - name: Create build-jar directory and add JAR files
       if: success()
       run: |
-        git branch -u origin/main
+        
         mkdir -p build-jar
         
         cp -f target/*.jar build-jar/ || true
+        git branch -u origin/main
         
         git config --global user.name 'Your Name'
         git config --global user.email 'your-username@users.noreply.github.com'
