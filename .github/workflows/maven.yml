@@ -27,3 +27,26 @@ jobs:
       with:
         name: my-artifact
         path: target/*.jar  # Modify this path based on your JAR file's location
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.event.action == 'push'
+
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: my-artifact
+        path: /tmp/my-artifact
+
+    - name: Move Artifact to Root
+      run: mv /tmp/my-artifact/target/*.jar ./
+
+    - name: Commit Artifact to Repository
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add .
+        git commit -m "Add generated JAR file"
+        git push
