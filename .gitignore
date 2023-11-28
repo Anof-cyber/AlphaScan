@@ -40,3 +40,4 @@ manifest.mf
 **/*~
 /target/
 /test/
+.vscode/

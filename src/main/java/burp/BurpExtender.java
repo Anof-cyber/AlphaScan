@@ -9,6 +9,7 @@ import java.io.PrintWriter;
  */
 public class BurpExtender implements IBurpExtender {
     private Low_Hanging lowHangingScanner;
+    private CriticalIssues criticalIssuesScanner;
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
     private PrintWriter stderr;
@@ -22,11 +23,11 @@ public class BurpExtender implements IBurpExtender {
         stderr = new PrintWriter(callbacks.getStderr(), true);
         helpers = callbacks.getHelpers();
         
-        lowHangingScanner = new Low_Hanging(callbacks,helpers);
-        //criticalIssuesScanner = new CriticalIssues(callbacks);
+        //lowHangingScanner = new Low_Hanging(callbacks,helpers);
+        criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
         
          // Register scanner checks
-        callbacks.registerScannerCheck(lowHangingScanner);
-        //callbacks.registerScannerCheck(criticalIssuesScanner);
+        //callbacks.registerScannerCheck(lowHangingScanner);
+        callbacks.registerScannerCheck(criticalIssuesScanner);
     }
 }

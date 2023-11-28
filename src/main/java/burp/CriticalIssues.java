@@ -1,6 +1,9 @@
 package burp;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -146,13 +149,7 @@ public class CriticalIssues implements IScannerCheck {
                     long post_request_time_10_sec_seconds = post_request_time_10_sec / 1000; // Convert milliseconds to seconds
 
                     if (post_request_time_10_sec_seconds >= 10) {
-                        String message = "Application is vulnerable to SQL Injection. It was observed that the application is susceptible to blind time-based SQL Injection.<br><br>"
-        + "The normal application response was noted around <b>" + (int) original_response_time + "</b> seconds. <br><br>"
-        + "With the Time-based payload <br><b>" + payload + "</b><br><br>"
-        + "It was observed that the application response had a delay of <br><b>" + (int) (postRequestTime - preRequestTime) / 1000 + "</b> seconds. <br><br>"
-        + "The revalidation was done with a 10 second delay with <b>" + payload.replace("5", "10") + "</b> and observed that the application response had a delay of <b>" + (int) (post_request_time_10_sec - pre_request_time_10_sec) / 1000 + "</b> second";
-
-
+                      
                         issues.add(new RaiseVuln(
                     base_pair.getHttpService(),
                     callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
@@ -161,7 +158,7 @@ public class CriticalIssues implements IScannerCheck {
                         callbacks.applyMarkers(request_response, requestHighlights, null),callbacks.applyMarkers(request_response_10_sec, requestHighlights_10_sec, null)
                     },
                     "AlphaScan - Time Based SQL Injection",
-                    message,
+                    "sql",
                     "Certain",
                     "High"
                 ));
@@ -187,22 +184,23 @@ public class CriticalIssues implements IScannerCheck {
     }
 
 
-
     private static String[] readPayloadsFromFile(String filePath) {
-        try {
-            // Get the project's root directory
-            String projectRoot = System.getProperty("user.dir");
-
-            // Construct the absolute file path
-            Path fileToRead = Path.of(projectRoot, filePath);
-
-            String fileContent = Files.readString(fileToRead);
-            return fileContent.split("\\r?\\n"); // Split content by new line
+        try (InputStream inputStream = CriticalIssues.class.getResourceAsStream("/" + filePath);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+    
+            if (inputStream != null) {
+                return reader.lines().toArray(String[]::new);
+            } else {
+                // Handle case when resource is not found
+                System.err.println("File not found in the JAR: " + filePath);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new String[0]; // Return an empty array if there's an issue reading the file
     }
+
+
 
     public double validateTime(IHttpRequestResponse base_pair) {
         long currentTime = System.currentTimeMillis();
