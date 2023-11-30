@@ -1,4 +1,4 @@
-package burp;
+package burp.vulnerabilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import burp.IBurpExtenderCallbacks;
+import burp.IExtensionHelpers;
+import burp.IHttpRequestResponse;
+import burp.IScanIssue;
+import burp.IScannerCheck;
+import burp.IScannerInsertionPoint;
+import burp.utility.MatchChecker;
+import burp.utility.RaiseVuln;
 /**
  *
  * @author AnoF

@@ -1,5 +1,17 @@
-package burp;
+package burp.vulnerabilities;
 import java.util.List;
+
+import burp.IBurpExtenderCallbacks;
+import burp.IExtensionHelpers;
+import burp.IHttpRequestResponse;
+import burp.IRequestInfo;
+import burp.IResponseInfo;
+import burp.IScanIssue;
+import burp.IScannerCheck;
+import burp.IScannerInsertionPoint;
+import burp.utility.MatchChecker;
+import burp.utility.RaiseVuln;
+
 import java.util.ArrayList;
 
 public class Low_Hanging implements IScannerCheck {

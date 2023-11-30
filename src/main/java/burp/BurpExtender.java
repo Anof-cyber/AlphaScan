@@ -2,6 +2,13 @@ package burp;
 
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JMenuItem;
+
+import burp.vulnerabilities.CriticalIssues;
+import burp.vulnerabilities.Low_Hanging;
 
 /**
  *
@@ -29,5 +36,16 @@ public class BurpExtender implements IBurpExtender {
          // Register scanner checks
         //callbacks.registerScannerCheck(lowHangingScanner);
         callbacks.registerScannerCheck(criticalIssuesScanner);
+        callbacks.registerContextMenuFactory(new Menueditor(callbacks));   
+    
+    
+    
+    
     }
+
+
+
+
+
+
 }

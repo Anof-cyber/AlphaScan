@@ -1,8 +1,12 @@
 
 
-package burp;
+package burp.utility;
 
 import java.net.URL;
+
+import burp.IHttpRequestResponse;
+import burp.IHttpService;
+import burp.IScanIssue;
 
 public class RaiseVuln implements IScanIssue {
     private IHttpService httpService;

@@ -1,6 +1,8 @@
-package burp;
+package burp.utility;
 import java.util.ArrayList;
 import java.util.List;
+
+import burp.IExtensionHelpers;
 
 public class MatchChecker {
 
