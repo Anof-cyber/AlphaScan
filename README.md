@@ -15,6 +15,8 @@ A BurpSuite extension for vulnerability Scanning
 - Missing X-Frame Header
 - Missing HSTS Header
 - Check If Request with Body support XML Content Type Header
-- Validate the Actual Session Cookie or Token from multiple Cookies/token from request (Manual Check)
+<br>
+- Verify the correct session cookie or token among multiple cookies/tokens present in the request. (Not Part of Active or Passive Scan, Need to be validatate before starting a scan through right click menu on any request with a valid session (Not expired))
+<br>
 - AWS SSRF ([Payloads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md#ssrf-url-for-cloud-instances "Payloads"))
 
