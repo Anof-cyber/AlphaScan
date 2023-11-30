@@ -29,8 +29,8 @@ jobs:
         if: success()
         run: |
           cp -f target/*.jar jar/
-          git config --global user.email "${{ secrets.email }}"
-          git config --global user.name 'Anof-cyber'
+          git config --global user.email "action@github.com"
+          git config --global user.name 'Actions'
           
           # Check if there are any changes and then proceed with commit and push
           if [[ $(git status --porcelain) ]]; then
