@@ -16,6 +16,7 @@ A BurpSuite extension for vulnerability Scanning
 - Missing HSTS Header
 - Check If Request with Body support XML Content Type Header
 <br>
+
 - Verify the correct session cookie or token among multiple cookies/tokens present in the request. (Not Part of Active or Passive Scan, Need to be validatate before starting a scan through right click menu on any request with a valid session (Not expired))
 <br>
 
