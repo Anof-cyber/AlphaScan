@@ -8,6 +8,10 @@ A BurpSuite extension for vulnerability Scanning
 
 ## Vulnerabilities
 
+
+
+###### Version  1.0
+
  - Blind Time Based Injection ([Payloads](https://github.com/CyberM0nster/SQL-Injection-Payload-List-/blob/master/Generic%20Time%20Based%20SQL%20Injection%20Payloads "Payloads"))
 - Missing CSP Header
 - CSP Header with Insecure Directives
