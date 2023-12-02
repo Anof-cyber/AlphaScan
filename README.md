@@ -18,5 +18,6 @@ A BurpSuite extension for vulnerability Scanning
 <br>
 - Verify the correct session cookie or token among multiple cookies/tokens present in the request. (Not Part of Active or Passive Scan, Need to be validatate before starting a scan through right click menu on any request with a valid session (Not expired))
 <br>
+
 - AWS SSRF ([Payloads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md#ssrf-url-for-cloud-instances "Payloads"))
 
