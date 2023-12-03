@@ -28,7 +28,7 @@ jobs:
       - name: Create build-jar directory and add JAR files
         if: success()
         run: |
-          cp -f target/*.jar jar/
+          cp -f target/*jar-with-dependencies.jar jar/
           git config --global user.email "action@github.com"
           git config --global user.name 'Actions'
           

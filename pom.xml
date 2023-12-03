@@ -64,7 +64,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>${project.name}</finalName>
+                    <finalName>${project.name}-${project.version}</finalName>
                     <appendAssemblyId>true</appendAssemblyId>
                 </configuration>
                 <executions>

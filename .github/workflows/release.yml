@@ -14,7 +14,7 @@ jobs:
 
       - name: List JAR files
         run: |
-          jar_files=$(find ./jar -name '*.jar')
+          jar_files=$(find ./jar -name '*jar-with-dependencies.jar')
           for file in $jar_files; do
             echo "Uploading $file"
             curl -sSL \
