@@ -4,7 +4,7 @@ package burp;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
+import burp.utility.Config;
 import javax.swing.JMenuItem;
 
 import burp.vulnerabilities.CriticalIssues;
@@ -20,6 +20,7 @@ public class BurpExtender implements IBurpExtender {
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
     private PrintWriter stderr;
+    private ConfigTab configTab;
     
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
@@ -29,6 +30,7 @@ public class BurpExtender implements IBurpExtender {
         stdout = new PrintWriter(callbacks.getStdout(), true);
         stderr = new PrintWriter(callbacks.getStderr(), true);
         helpers = callbacks.getHelpers();
+        Config.setConfigValue("ChromeDriverPath", null);
         
         //lowHangingScanner = new Low_Hanging(callbacks,helpers);
         criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
@@ -36,16 +38,27 @@ public class BurpExtender implements IBurpExtender {
          // Register scanner checks
         //callbacks.registerScannerCheck(lowHangingScanner);
         callbacks.registerScannerCheck(criticalIssuesScanner);
-        callbacks.registerContextMenuFactory(new Menueditor(callbacks));   
-    
-    
-    
+        callbacks.registerContextMenuFactory(new Menueditor(callbacks));
+        String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
+        if (chromeDriverPath != null && !chromeDriverPath.isEmpty()) {
+            Config.setConfigValue("ChromeDriverPath", chromeDriverPath); // Store in Config class
+        }
+        
+
+        configTab = new ConfigTab(callbacks);
+
+        // Add the custom tab to Burp UI
+        callbacks.addSuiteTab(new ITab() {
+            @Override
+            public String getTabCaption() {
+                return "AlphaScan Config";
+            }
+
+            @Override
+            public java.awt.Component getUiComponent() {
+                return configTab; // Display your ConfigTab in the Burp UI
+            }
+        });
     
     }
-
-
-
-
-
-
 }

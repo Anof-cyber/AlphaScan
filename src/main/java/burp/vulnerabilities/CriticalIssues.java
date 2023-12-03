@@ -128,7 +128,7 @@ public class CriticalIssues implements IScannerCheck {
 
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         double original_response_time = validateTime(base_pair);
-        String fileName = "payloads/sql.txt";
+        String fileName = "payloads/time_sql.txt";
         String[] fileContent = readPayloadsFromFile(fileName);
         for (String payload : fileContent) {
             

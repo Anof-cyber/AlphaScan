@@ -20,6 +20,23 @@ public class Sessionvalidation {
     public void processRequest(IHttpRequestResponse messages) {
         // Handle each IHttpRequestResponse object in the messages array
         AuthMethod authMethod = cookieHandler(messages);
+        switch (authMethod) {
+            case HEADER:
+                // Handle authentication using headers
+                //handleHeaderAuthentication(messages);
+                break;
+            case COOKIE:
+                // Handle authentication using cookies
+                //handleCookieAuthentication(messages);
+                break;
+            case NONE:
+                // No authentication needed
+                //handleNoAuthentication(messages);
+                break;
+            default:
+                // Handle default case (if necessary)
+                break;
+        }
 
           
         }
