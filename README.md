@@ -25,5 +25,4 @@ A BurpSuite extension for vulnerability Scanning
 <br>
 
 - AWS SSRF ([Payloads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md#ssrf-url-for-cloud-instances "Payloads"))
-
 - Reflected XSS ([Payloads](https://github.com/Proviesec/xss-payload-list/tree/main "Payloads"))
