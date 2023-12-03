@@ -9,6 +9,18 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+
+import java.util.concurrent.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import burp.IBurpExtenderCallbacks;
 import burp.IExtensionHelpers;
@@ -16,8 +28,10 @@ import burp.IHttpRequestResponse;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
+import burp.utility.Config;
 import burp.utility.MatchChecker;
 import burp.utility.RaiseVuln;
+import burp.utility.SeleniumHandler;
 /**
  *
  * @author AnoF
@@ -26,6 +40,9 @@ import burp.utility.RaiseVuln;
 public class CriticalIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
+    private static final SeleniumHandler seleniumHandler = new SeleniumHandler(); // Instantiate SeleniumHandler 
+    
+
 
     public CriticalIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         this.callbacks = callbacks;
@@ -44,9 +61,13 @@ public class CriticalIssues implements IScannerCheck {
 
     @Override
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
+        WebDriver driver = initializeWebDriver();
+        SeleniumHandler seleniumHandler = new SeleniumHandler();
+        seleniumHandler.setWebDriver(driver);
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
-        issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
+        //issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
+        //issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
+        issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint,seleniumHandler));
         
         
         return issues;
@@ -98,7 +119,7 @@ public class CriticalIssues implements IScannerCheck {
             List < int[] > matches = matchChecker.getMatches(updated_request_response.getRequest(), helper.stringToBytes("hostname"), helper);
             
             if (matches.isEmpty()) {
-                return issues;
+                continue;
             }
             List<int[]> requestHighlights = new ArrayList<>(1);
             requestHighlights.add(insertionPoint.getPayloadOffsets(helper.stringToBytes(payload)));
@@ -194,28 +215,57 @@ public class CriticalIssues implements IScannerCheck {
 
 
 
-    private ArrayList < IScanIssue > ReflectedXSS(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint) {
-        ArrayList < IScanIssue > issues = new ArrayList < > ();
-
-        String fileName = "payloads/xss.txt";
-        String[] fileContent = readPayloadsFromFile(fileName);
-        for (String payload : fileContent) {
+    private ArrayList<IScanIssue> ReflectedXSS(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint, SeleniumHandler seleniumHandler) {
+        ArrayList<IScanIssue> issues = new ArrayList<>();
+    
+        try {
+            String fileName = "payloads/xss.txt";
+            String[] fileContent = readPayloadsFromFile(fileName);
+    
+            for (String payload : fileContent) {
+                byte[] modified_request = insertionPoint.buildRequest(helper.stringToBytes(payload));
+                IHttpRequestResponse updated_request_response = callbacks.makeHttpRequest(base_pair.getHttpService(), modified_request);
+    
+                MatchChecker matchChecker = new MatchChecker();
+                List<int[]> matches = matchChecker.getMatches(updated_request_response.getRequest(), helper.stringToBytes(payload), helper);
+                String statedMimeType = callbacks.getHelpers().analyzeResponse(updated_request_response.getResponse()).getStatedMimeType();
+    
+                if (matches.isEmpty() && (statedMimeType == null || !statedMimeType.toLowerCase().contains("html"))) {
+                    continue;
+                }
+    
+                int bodyOffset = callbacks.getHelpers().analyzeResponse(updated_request_response.getResponse()).getBodyOffset();
+                List<int[]> requestHighlights = new ArrayList<>(1);
+                requestHighlights.add(insertionPoint.getPayloadOffsets(helper.stringToBytes(payload)));
+    
+                byte[] responseBodyBytes = Arrays.copyOfRange(updated_request_response.getResponse(), bodyOffset, updated_request_response.getResponse().length);
+                String responseBody = new String(responseBodyBytes);
+    
+                try {
+                    String alertText = seleniumHandler.checkForAlerts(responseBody);
+                    issues.add(new RaiseVuln(
+                            base_pair.getHttpService(),
+                            callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
+                            new IHttpRequestResponse[] {
+                                    base_pair,
+                                    callbacks.applyMarkers(updated_request_response, requestHighlights, matches)
+                            },
+                            "AlphaScan - Reflected XSS",
+                            "The application is vulnerable to Reflected Cross-Site Scripting (XSS). This vulnerability allows an attacker to inject malicious scripts that execute in the victim's browser. The XSS payload <b>" + payload + "</b> was injected into the <b>" + insertionPoint.getInsertionPointName() + "</b> parameter and was reflected in the response. Subsequent analysis confirms that the injected payload was successfully executed as HTML in the victim's browser, resulting in the display of an alert message:<br><br><b>" + alertText + "</b><br><br>",
+                            "Certain",
+                            "High"
+                    ));
+                } catch (Exception e) {
+                    callbacks.printError("Error occurred: " + e.getMessage());
+                }
+            }
+        } finally {
             
-
-        byte[] modified_request = insertionPoint.buildRequest(helper.stringToBytes(payload));
-        IHttpRequestResponse request_response = callbacks.makeHttpRequest(base_pair.getHttpService(), modified_request);
-
         }
-
-
+    
         return issues;
-
-
     }
-
-
-
-
+    
 
 
     private static String[] readPayloadsFromFile(String filePath) {
@@ -246,7 +296,17 @@ public class CriticalIssues implements IScannerCheck {
         return (double) elapsedTime / 1000.0; // Convert milliseconds to seconds
     }
 
+    
+    private static WebDriver initializeWebDriver() {
+        String chromeDriverPath = Config.getConfigValue("ChromeDriverPath");
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
+
+        return new ChromeDriver(options);
+    }
 
 
 }
