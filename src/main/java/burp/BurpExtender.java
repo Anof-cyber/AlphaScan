@@ -31,6 +31,7 @@ public class BurpExtender implements IBurpExtender {
         stderr = new PrintWriter(callbacks.getStderr(), true);
         helpers = callbacks.getHelpers();
         Config.setConfigValue("ChromeDriverPath", null);
+        Config.setConfigValue("IsXSS", String.valueOf(false));
         
         //lowHangingScanner = new Low_Hanging(callbacks,helpers);
         criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
@@ -51,7 +52,7 @@ public class BurpExtender implements IBurpExtender {
         callbacks.addSuiteTab(new ITab() {
             @Override
             public String getTabCaption() {
-                return "AlphaScan Config";
+                return "AlphaScan";
             }
 
             @Override
