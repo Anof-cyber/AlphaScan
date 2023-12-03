@@ -193,6 +193,31 @@ public class CriticalIssues implements IScannerCheck {
     }
 
 
+
+    private ArrayList < IScanIssue > ReflectedXSS(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint) {
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+
+        String fileName = "payloads/xss.txt";
+        String[] fileContent = readPayloadsFromFile(fileName);
+        for (String payload : fileContent) {
+            
+
+        byte[] modified_request = insertionPoint.buildRequest(helper.stringToBytes(payload));
+        IHttpRequestResponse request_response = callbacks.makeHttpRequest(base_pair.getHttpService(), modified_request);
+
+        }
+
+
+        return issues;
+
+
+    }
+
+
+
+
+
+
     private static String[] readPayloadsFromFile(String filePath) {
         try (InputStream inputStream = CriticalIssues.class.getResourceAsStream("/" + filePath);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

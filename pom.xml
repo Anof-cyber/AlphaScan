@@ -5,92 +5,84 @@
     <version>0.1-release</version>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/net.portswigger.burp.extender/burp-extender-api -->
+     
 <dependency>
     <groupId>net.portswigger.burp.extender</groupId>
     <artifactId>burp-extender-api</artifactId>
     <version>2.3</version>
 </dependency>
 
-    
-        <!-- ProGuard dependency -->
-        <dependency>
-            <groupId>com.guardsquare</groupId>
-            <artifactId>proguard-base</artifactId>
-            <version>7.2.2</version>
-            <scope>runtime</scope>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/com.guardsquare/proguard-core -->
 <dependency>
-    <groupId>com.guardsquare</groupId>
-    <artifactId>proguard-core</artifactId>
-    <version>7.1.0-beta3</version>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.11.0</version>
 </dependency>
+
+
 
         <!-- Add other dependencies if needed -->
     </dependencies>
 
     <build>
-    <resources>
-        <resource>
-            <directory>src/main/resources</directory>
-        </resource>
-    </resources>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <finalName>${project.name}</finalName>
         <plugins>
-            <!-- ... -->
             <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.4.0</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- Define your manifest entries if needed -->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- Define your manifest entries if needed -->
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.name}</finalName>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>proguard</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <proguardVersion>7.1.0-beta3</proguardVersion>
-                    
-                    <options>
-                        
-                        <!-- Input and output JARs -->
-                       <!-- ProGuard configuration file -->
-                        <!--<option>-config path/to/your/proguard.cfg</option>-->
-                        
-                        <!-- Arguments for your Burp extension -->
-                           <!-- Keep specific classes/interfaces -->
-        <option>-keep class java.lang.String</option>
-        <option>-keep interface burp.IHttpRequestResponse</option>
-        <option>-keep interface burp.IHttpService</option>
-                        <option>-keep class java.** { *; }</option>
-                        <option>-keep class burp.BurpExtender</option>
-                        <option>-dontwarn java.**</option>
-                         <option>-dontwarn burp.**</option>
-                          <option>-optimizationpasses 5</option>
-                    <option>-allowaccessmodification</option>
-                    <option>-dontusemixedcaseclassnames</option>
-                    <option>-dontskipnonpubliclibraryclasses</option>
-
-                        
-                        <!-- Add more ProGuard options as needed -->
-                    </options>
-                    <!-- Additional ProGuard configurations if required -->
-                    <!--<obfuscate>true</obfuscate>-->
-                    <!--<obfuscationConfigurations>path/to/your/proguard.cfg</obfuscationConfigurations>-->
-                </configuration>
             </plugin>
-            <!-- ... -->
         </plugins>
     </build>
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
     
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-        <exec.mainClass>com.scanner.vulnscan.VulnScan</exec.mainClass>
-    </properties>
-    <name>AlphaScan</name>
+    
 </project>

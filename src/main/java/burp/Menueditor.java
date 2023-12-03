@@ -2,9 +2,12 @@ package burp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import burp.utility.Config;
 import burp.vulnerabilities.Sessionvalidation;
 
 public class Menueditor implements IContextMenuFactory {
@@ -36,6 +39,8 @@ public class Menueditor implements IContextMenuFactory {
             JOptionPane.showMessageDialog(null, "Please select only one request for this action.", "Multiple Requests Selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+    
         Sessionvalidation sessionValidation = new Sessionvalidation();
         sessionValidation.processRequest(messages[0]);
 
