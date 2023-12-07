@@ -241,7 +241,8 @@ public class Low_Hanging implements IScannerCheck {
 
         if (updated_status_code == analysis_response.getStatusCode()) {
 
-            MatchChecker matchChecker = new MatchChecker();
+            //MatchChecker matchChecker = new MatchChecker();
+            MatchChecker matchChecker = new MatchChecker(helper);
             List < int[] > matches = matchChecker.getMatches(updated_request_response.getRequest(), helper.stringToBytes("Content-Type: application/xml"), helper);
 
 
