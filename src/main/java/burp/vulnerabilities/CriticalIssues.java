@@ -47,10 +47,10 @@ public class CriticalIssues implements IScannerCheck {
         SeleniumHandler seleniumHandler = new SeleniumHandler();
         seleniumHandler.setWebDriver(driver);
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        //issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
-        //issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
+        issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
+        issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
         issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
-        //issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
+        issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
 
         return issues;
     }
@@ -59,7 +59,7 @@ public class CriticalIssues implements IScannerCheck {
     public int consolidateDuplicateIssues(IScanIssue existingIssue, IScanIssue newIssue) {
 
         if (existingIssue.getIssueName().equals(newIssue.getIssueName())) {
-            return -1;
+            return 1;
 
         } else {
             return 0;
@@ -102,6 +102,8 @@ public class CriticalIssues implements IScannerCheck {
     
         return issues;
     }
+    
+  
     
     
 
