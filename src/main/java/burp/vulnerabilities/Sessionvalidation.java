@@ -87,4 +87,11 @@ public class Sessionvalidation {
         return false;
     }
 
+
+    void validate_cookie(IHttpRequestResponse message){
+
+
+        
+    }
+
 }

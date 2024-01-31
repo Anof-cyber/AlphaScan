@@ -35,14 +35,14 @@ public class BurpExtender implements IBurpExtender {
         Config.setConfigValue("ChromeDriverPath", null);
         Config.setConfigValue("IsXSS", String.valueOf(false));
         
-        //lowHangingScanner = new Low_Hanging(callbacks,helpers);
-        //criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
-        sstiIssuesScanner = new SSTI(callbacks,helpers);
+        lowHangingScanner = new Low_Hanging(callbacks,helpers);
+        criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
+        //sstiIssuesScanner = new SSTI(callbacks,helpers);
         
          // Register scanner checks
-        //callbacks.registerScannerCheck(lowHangingScanner);
-        //callbacks.registerScannerCheck(criticalIssuesScanner);
-        callbacks.registerScannerCheck(sstiIssuesScanner);
+        callbacks.registerScannerCheck(lowHangingScanner);
+        callbacks.registerScannerCheck(criticalIssuesScanner);
+        //callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
         String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
         if (chromeDriverPath != null && !chromeDriverPath.isEmpty()) {
