@@ -1,9 +1,13 @@
 package burp;
 
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import burp.IBurpExtender;
+import burp.IBurpExtenderCallbacks;
+import burp.IExtensionHelpers;
+import burp.ITab;
 import burp.utility.Config;
 import javax.swing.JMenuItem;
 
@@ -23,7 +27,7 @@ public class BurpExtender implements IBurpExtender {
     private PrintWriter stdout;
     private PrintWriter stderr;
     private ConfigTab configTab;
-    
+
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
         callbacks.setExtensionName("AlphaScan");
@@ -34,21 +38,20 @@ public class BurpExtender implements IBurpExtender {
         helpers = callbacks.getHelpers();
         Config.setConfigValue("ChromeDriverPath", null);
         Config.setConfigValue("IsXSS", String.valueOf(false));
-        
-        lowHangingScanner = new Low_Hanging(callbacks,helpers);
-        criticalIssuesScanner = new CriticalIssues(callbacks,helpers);
-        //sstiIssuesScanner = new SSTI(callbacks,helpers);
-        
-         // Register scanner checks
+
+        lowHangingScanner = new Low_Hanging(callbacks, helpers);
+        criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
+        sstiIssuesScanner = new SSTI(callbacks, helpers);
+
+        // Register scanner checks
         callbacks.registerScannerCheck(lowHangingScanner);
         callbacks.registerScannerCheck(criticalIssuesScanner);
-        //callbacks.registerScannerCheck(sstiIssuesScanner);
+        callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
         String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
         if (chromeDriverPath != null && !chromeDriverPath.isEmpty()) {
             Config.setConfigValue("ChromeDriverPath", chromeDriverPath); // Store in Config class
         }
-        
 
         configTab = new ConfigTab(callbacks);
 
@@ -64,6 +67,6 @@ public class BurpExtender implements IBurpExtender {
                 return configTab; // Display your ConfigTab in the Burp UI
             }
         });
-    
+
     }
 }
