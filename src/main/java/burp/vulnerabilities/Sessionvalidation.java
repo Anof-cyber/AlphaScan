@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.SwingWorker;
 
+import java.nio.charset.StandardCharsets;
 
 import burp.IBurpExtenderCallbacks;
 import burp.IExtensionHelpers;
 import burp.IHttpRequestResponse;
 import burp.IRequestInfo;
+
+import burp.utility.RaiseVuln;
+import burp.utility.MatchChecker;
 
 public class Sessionvalidation {
 
@@ -133,6 +137,22 @@ public class Sessionvalidation {
                 }
                 else {
                     callbacks.issueAlert(String.valueOf(cookies[0]));
+                    MatchChecker matchChecker = new MatchChecker(helpers);
+                    List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
+                    List < int[] > matches2 = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(cookies[0]), helpers);
+
+                    callbacks.addScanIssue(new RaiseVuln(
+                        message.getHttpService(),
+                        callbacks.getHelpers().analyzeRequest(message).getUrl(),
+                    new IHttpRequestResponse[] {
+                        message,
+                        callbacks.applyMarkers(modifiedMessage, matches2, matches)
+                    },
+                    "AlphaScan - Session Identifier Found",
+                    "The request Cookie found to be used as session. <br>" + cookies[0],
+                    "Certain",
+                    "Information"
+                ));
                 }
 
 
