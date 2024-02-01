@@ -1,6 +1,7 @@
 package burp.vulnerabilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.SwingWorker;
 
@@ -33,7 +34,6 @@ public class Sessionvalidation {
         this.callbacks = callbacks;
         this.helpers = helpers;
         // Handle each IHttpRequestResponse object in the messages array
-        callbacks.printOutput("Checking cookie2");
         AuthMethod authMethod = cookieHandler(messages);
         switch (authMethod) {
             case HEADER:
@@ -59,8 +59,7 @@ public class Sessionvalidation {
     public AuthMethod cookieHandler(IHttpRequestResponse message) {
         IRequestInfo analyzedRequest = helpers.analyzeRequest(message);
         List<String> listOfHeaders = analyzedRequest.getHeaders();
-         callbacks.printOutput("Checking cookie1");
-
+         
         boolean isHeaderBasedAuth = containsAPISessionHeader(listOfHeaders);
         if (isHeaderBasedAuth) {
             return AuthMethod.HEADER;
@@ -138,30 +137,56 @@ public class Sessionvalidation {
 
 
             }
+            else {
+                List<String> requiredCookies = new ArrayList<>();
 
-            // Iterate through each cookie
-            for (String cookie : cookies) {
-                // Remove the current cookie from the header
-                String modifiedCookieHeader = removeCookieFromHeader(cookieHeader, cookie);
+                for (String cookie : cookies) {
+                    // Remove the current cookie from the header
+                    String modifiedCookieHeader = removeCookieFromHeader(cookieHeader, cookie);
+                    // Create a new request with the modified Cookie header
+                    List<String> modifiedHeaders = replaceCookieHeader(headers, modifiedCookieHeader);
+                    byte[] modifiedRequest = helpers.buildHttpMessage(modifiedHeaders, helpers.stringToBytes(request_body));
 
-                // Create a new request with the modified Cookie header
-                List<String> modifiedHeaders = replaceCookieHeader(headers, modifiedCookieHeader);
-                byte[] modifiedRequest = helpers.buildHttpMessage(modifiedHeaders, helpers.stringToBytes(request_body));
-
-                // Send the modified request
-                IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest);
-                Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
-                if (status_code == modified_status_code) {
-
+                    // Send the modified request
+                    IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest);
+                    Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
+                    if (status_code.equals(modified_status_code)) {
+                        
                     continue;
                 }
-                else {
+                    else {
+                        
+                         //// Send request again only with this cookie
+                        headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
+                        headers.add("Cookie: " + cookie);
+                        byte[] modifiedRequest_new = helpers.buildHttpMessage(headers, helpers.stringToBytes(request_body));
+                        IHttpRequestResponse modifiedMessage_new = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest_new);
+                        Short modified_status_code_new = helpers.analyzeResponse(modifiedMessage_new.getResponse()).getStatusCode();
+                      
+                        if (status_code.equals(modified_status_code_new)) {
+                            // Assume this is the one used for session
+                            callbacks.issueAlert(String.valueOf(cookie));
+                          
+                        }
+                        else {
+                           // Assume this cookie is required along with other cookies. 
+                           // add it to array to analysis later
+                           callbacks.printOutput("Looks this cookie is required along with other cookies" + cookie);
+                           requiredCookies.add(cookie);
+                        }
+                        }
+
+                }
+
+                if (!requiredCookies.isEmpty()) {
+                    callbacks.printOutput(Arrays.toString(requiredCookies.toArray()));
 
 
                 }
-                // Process the response if needed
-                // processResponse(modifiedMessage);
             }
+            
+
+            
 
             return null;
         }
