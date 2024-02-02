@@ -115,6 +115,8 @@ public class Sessionvalidation {
             byte[] request = message.getRequest();
             String request_string = helpers.bytesToString(request);
             String request_body = request_string.substring(request_body_offset);
+            MatchChecker matchChecker = new MatchChecker(helpers);
+                            
             
             // Extract the Cookie header
             String cookieHeader = getCookieHeader(headers);
@@ -137,7 +139,6 @@ public class Sessionvalidation {
                 }
                 else {
                     callbacks.issueAlert(String.valueOf(cookies[0]));
-                    MatchChecker matchChecker = new MatchChecker(helpers);
                     List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
                     List < int[] > matches2 = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(cookies[0]), helpers);
 
@@ -170,6 +171,9 @@ public class Sessionvalidation {
                     // Send the modified request
                     IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest);
                     Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
+
+                    List < int[] > matches_first_response = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
+                    List < int[] > matches_first_request = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(cookie), helpers);
                     if (status_code.equals(modified_status_code)) {
                         
                     continue;
@@ -186,7 +190,6 @@ public class Sessionvalidation {
                         if (status_code.equals(modified_status_code_new)) {
                             // Assume this is the one used for session
                             callbacks.issueAlert(String.valueOf(cookie));
-                            MatchChecker matchChecker = new MatchChecker(helpers);
                             List < int[] > matches = matchChecker.getMatches(modifiedMessage_new.getResponse(), modified_status_code_new.toString().getBytes(StandardCharsets.UTF_8), helpers);
                             List < int[] > matches2 = matchChecker.getMatches(modifiedMessage_new.getRequest(), helpers.stringToBytes(cookie), helpers);
 
@@ -195,10 +198,11 @@ public class Sessionvalidation {
                         callbacks.getHelpers().analyzeRequest(message).getUrl(),
                     new IHttpRequestResponse[] {
                         message,
+                        callbacks.applyMarkers(modifiedMessage, matches_first_request, matches_first_response),
                         callbacks.applyMarkers(modifiedMessage_new, matches2, matches)
                     },
                     "AlphaScan - Session Identifier Found",
-                    "The request Cookie found to be used as session. <br>" + cookies[0],
+                    "The request Cookie found to be used as session. <br><br><b>" + cookie +"</b>",
                     "Certain",
                     "Information"
                 ));
