@@ -173,7 +173,7 @@ public class Sessionvalidation {
                     if (status_code.equals(modified_status_code)) {
                         
                     continue;
-                }
+                    }
                     else {
                         
                          //// Send request again only with this cookie
@@ -186,6 +186,22 @@ public class Sessionvalidation {
                         if (status_code.equals(modified_status_code_new)) {
                             // Assume this is the one used for session
                             callbacks.issueAlert(String.valueOf(cookie));
+                            MatchChecker matchChecker = new MatchChecker(helpers);
+                            List < int[] > matches = matchChecker.getMatches(modifiedMessage_new.getResponse(), modified_status_code_new.toString().getBytes(StandardCharsets.UTF_8), helpers);
+                            List < int[] > matches2 = matchChecker.getMatches(modifiedMessage_new.getRequest(), helpers.stringToBytes(cookie), helpers);
+
+                    callbacks.addScanIssue(new RaiseVuln(
+                        message.getHttpService(),
+                        callbacks.getHelpers().analyzeRequest(message).getUrl(),
+                    new IHttpRequestResponse[] {
+                        message,
+                        callbacks.applyMarkers(modifiedMessage_new, matches2, matches)
+                    },
+                    "AlphaScan - Session Identifier Found",
+                    "The request Cookie found to be used as session. <br>" + cookies[0],
+                    "Certain",
+                    "Information"
+                ));
                           
                         }
                         else {
@@ -200,6 +216,7 @@ public class Sessionvalidation {
 
                 if (!requiredCookies.isEmpty()) {
                     callbacks.printOutput(Arrays.toString(requiredCookies.toArray()));
+                    
 
 
                 }
