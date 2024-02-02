@@ -14,7 +14,7 @@ import burp.IRequestInfo;
 
 import burp.utility.RaiseVuln;
 import burp.utility.MatchChecker;
-
+import burp.utility.Config;
 public class Sessionvalidation {
 
     private IExtensionHelpers helpers;
@@ -141,6 +141,7 @@ public class Sessionvalidation {
                     callbacks.issueAlert(String.valueOf(cookies[0]));
                     List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
                     List < int[] > matches2 = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(cookies[0]), helpers);
+                    Config.setConfigValue("CookieHeader", cookies[0]);
 
                     callbacks.addScanIssue(new RaiseVuln(
                         message.getHttpService(),
@@ -193,19 +194,22 @@ public class Sessionvalidation {
                             List < int[] > matches = matchChecker.getMatches(modifiedMessage_new.getResponse(), modified_status_code_new.toString().getBytes(StandardCharsets.UTF_8), helpers);
                             List < int[] > matches2 = matchChecker.getMatches(modifiedMessage_new.getRequest(), helpers.stringToBytes(cookie), helpers);
 
-                    callbacks.addScanIssue(new RaiseVuln(
-                        message.getHttpService(),
-                        callbacks.getHelpers().analyzeRequest(message).getUrl(),
-                    new IHttpRequestResponse[] {
-                        message,
-                        callbacks.applyMarkers(modifiedMessage, matches_first_request, matches_first_response),
-                        callbacks.applyMarkers(modifiedMessage_new, matches2, matches)
-                    },
-                    "AlphaScan - Session Identifier Found",
-                    "The request Cookie found to be used as session. <br><br><b>" + cookie +"</b>",
-                    "Certain",
-                    "Information"
-                ));
+                            Config.setConfigValue("CookieHeader", cookie);
+                            
+
+                            callbacks.addScanIssue(new RaiseVuln(
+                                    message.getHttpService(),
+                                    callbacks.getHelpers().analyzeRequest(message).getUrl(),
+                                new IHttpRequestResponse[] {
+                                    message,
+                                    callbacks.applyMarkers(modifiedMessage, matches_first_request, matches_first_response),
+                                    callbacks.applyMarkers(modifiedMessage_new, matches2, matches)
+                                },
+                                "AlphaScan - Session Identifier Found",
+                                "The request Cookie found to be used as session. <br><br><b>" + cookie +"</b>",
+                                "Certain",
+                                "Information"
+                            ));
                           
                         }
                         else {
@@ -219,7 +223,32 @@ public class Sessionvalidation {
                 }
 
                 if (!requiredCookies.isEmpty()) {
-                    callbacks.printOutput(Arrays.toString(requiredCookies.toArray()));
+                    headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
+                    String cookieHeader_check = String.join("; ", requiredCookies);
+
+                    headers.add("Cookie: " + cookieHeader_check);
+                    byte[] modifiedRequest_ = helpers.buildHttpMessage(headers, helpers.stringToBytes(request_body));
+                    IHttpRequestResponse modifiedMessage_ = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest_);
+                    Short modified_status_code_ = helpers.analyzeResponse(modifiedMessage_.getResponse()).getStatusCode();
+                    List < int[] > matches_ = matchChecker.getMatches(modifiedMessage_.getResponse(), modified_status_code_.toString().getBytes(StandardCharsets.UTF_8), helpers);
+                    List < int[] > matches2_ = matchChecker.getMatches(modifiedMessage_.getRequest(), helpers.stringToBytes(cookieHeader_check), helpers);
+                    if (status_code.equals(modified_status_code_)) {
+                        Config.setConfigValue("CookieHeader", requiredCookies);
+
+                        callbacks.addScanIssue(new RaiseVuln(
+                        message.getHttpService(),
+                        callbacks.getHelpers().analyzeRequest(message).getUrl(),
+                    new IHttpRequestResponse[] {
+                        message,
+                        callbacks.applyMarkers(modifiedMessage_, matches2_, matches_)
+                    },
+                    "AlphaScan - Session Identifier Found",
+                    "The request Cookie found to be used as session. <br>" + cookieHeader_check,
+                    "Certain",
+                    "Information"
+                ));
+
+                }
                     
 
 
