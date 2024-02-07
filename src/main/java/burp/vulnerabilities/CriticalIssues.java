@@ -103,8 +103,50 @@ public class CriticalIssues implements IScannerCheck {
         return issues;
     }
     
-  
-    
+    // Forced Browsing is experimental
+    private ArrayList < IScanIssue > Forced_Browsing(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint) {
+
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+
+        String cookieHeader = Config.getConfigValue("CookieHeader");
+        if (cookieHeader != null) {
+            Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
+            List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
+            int bodyOffset = helper.analyzeRequest(base_pair.getRequest()).getBodyOffset();
+            byte[] request = base_pair.getRequest();
+            String request_string = helper.bytesToString(request);
+            String request_body = request_string.substring(bodyOffset);
+
+            headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
+            headers.add("Scanner: AlphaScan");
+
+            byte[] modifiedRequest = helper.buildHttpMessage(headers, helper.stringToBytes(request_body));
+            IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(base_pair.getHttpService(), modifiedRequest);
+            Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
+
+            if (orignal_status.equals(modified_status_code)) {
+
+                issues.add(new RaiseVuln(
+                base_pair.getHttpService(),
+                callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
+                new IHttpRequestResponse[] {
+                    base_pair
+                    //callbacks.applyMarkers(updated_request_response, requestHighlights, matches)
+                },
+                "AlphaScan - Forced Browsing",
+                "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL manipulation.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
+                "Tentative",
+                "High"
+            ));
+
+            }
+        }
+
+
+        return issues;
+
+
+    }
     
 
     private ArrayList < IScanIssue > AWS_SSRF(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint) {

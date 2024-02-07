@@ -233,7 +233,7 @@ public class Sessionvalidation {
                     List < int[] > matches_ = matchChecker.getMatches(modifiedMessage_.getResponse(), modified_status_code_.toString().getBytes(StandardCharsets.UTF_8), helpers);
                     List < int[] > matches2_ = matchChecker.getMatches(modifiedMessage_.getRequest(), helpers.stringToBytes(cookieHeader_check), helpers);
                     if (status_code.equals(modified_status_code_)) {
-                        Config.setConfigValue("CookieHeader", requiredCookies);
+                        Config.setConfigValue("CookieHeader", cookieHeader_check);
 
                         callbacks.addScanIssue(new RaiseVuln(
                         message.getHttpService(),
