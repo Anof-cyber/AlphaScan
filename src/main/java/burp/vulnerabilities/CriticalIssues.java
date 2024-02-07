@@ -1,5 +1,6 @@
 package burp.vulnerabilities;
 
+import java.net.URL;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,8 @@ import burp.utility.SeleniumHandler;
 public class CriticalIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
+    private static final List<String> DISALLOWED_EXTENSIONS = Arrays.asList(".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg");
+
 
     public CriticalIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         this.callbacks = callbacks;
@@ -47,10 +50,11 @@ public class CriticalIssues implements IScannerCheck {
         SeleniumHandler seleniumHandler = new SeleniumHandler();
         seleniumHandler.setWebDriver(driver);
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
-        issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
-        issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
-        issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
+        //issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
+        //issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
+        //issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
+        //issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
+        issues.addAll(Forced_Browsing(baseRequestResponse, insertionPoint));
 
         return issues;
     }
@@ -116,6 +120,19 @@ public class CriticalIssues implements IScannerCheck {
             byte[] request = base_pair.getRequest();
             String request_string = helper.bytesToString(request);
             String request_body = request_string.substring(bodyOffset);
+            URL requestUrl = helper.analyzeRequest(base_pair.getRequest()).getUrl();
+
+            String cookieConfig = Config.getConfigValue("CookieHeader");
+
+            if (cookieConfig == null) {
+                return issues;
+            }
+
+            if (isStaticResource(requestUrl)) {
+                return issues;
+            }
+
+
 
             headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
             headers.add("Scanner: AlphaScan");
@@ -354,6 +371,17 @@ public class CriticalIssues implements IScannerCheck {
         options.addArguments("--disable-gpu");
 
         return new ChromeDriver(options);
+    }
+
+    public boolean isStaticResource(URL requestUrl) {
+        // Check if the request URL contains any disallowed file extension
+        String path = requestUrl.getPath();
+        for (String extension : DISALLOWED_EXTENSIONS) {
+            if (path.toLowerCase().endsWith(extension)) {
+                return true; // Request is for a static resource
+            }
+        }
+        return false; // Request is not for a static resource
     }
 
 }
