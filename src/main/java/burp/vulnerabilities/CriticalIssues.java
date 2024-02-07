@@ -46,14 +46,18 @@ public class CriticalIssues implements IScannerCheck {
 
     @Override
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
-        WebDriver driver = initializeWebDriver();
-        SeleniumHandler seleniumHandler = new SeleniumHandler();
-        seleniumHandler.setWebDriver(driver);
         ArrayList < IScanIssue > issues = new ArrayList < > ();
+        WebDriver driver = initializeWebDriver();
+        if (driver != null) {
+            SeleniumHandler seleniumHandler = new SeleniumHandler();
+            seleniumHandler.setWebDriver(driver);
+            issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
+        };
+        
         //issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
         //issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
         //issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
-        //issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
+        
         issues.addAll(Forced_Browsing(baseRequestResponse, insertionPoint));
 
         return issues;
@@ -367,6 +371,9 @@ public class CriticalIssues implements IScannerCheck {
 
     private static WebDriver initializeWebDriver() {
         String chromeDriverPath = Config.getConfigValue("ChromeDriverPath");
+        if (chromeDriverPath == null) {
+            return null;
+        }
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
