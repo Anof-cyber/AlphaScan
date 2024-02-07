@@ -117,6 +117,7 @@ public class CriticalIssues implements IScannerCheck {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         String cookieHeader = Config.getConfigValue("CookieHeader");
+        callbacks.printOutput(cookieHeader);
         if (cookieHeader != null) {
             Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
             List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
@@ -125,12 +126,16 @@ public class CriticalIssues implements IScannerCheck {
             String request_string = helper.bytesToString(request);
             String request_body = request_string.substring(bodyOffset);
             URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
+            callbacks.printOutput("Cookie check");
+            
 
 
             if (isStaticResource(requestUrl)) {
+                callbacks.printOutput("Static file");
                 return issues;
             }
             if (orignal_status != 200 || orignal_status != 201) {
+                callbacks.printOutput("Status Code is 200 or 201");
                 return issues;
             }
 
