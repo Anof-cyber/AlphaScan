@@ -131,6 +131,9 @@ public class CriticalIssues implements IScannerCheck {
             if (isStaticResource(requestUrl)) {
                 return issues;
             }
+            if (orignal_status != 200 && orignal_status != 201) {
+                return issues;
+            }
 
 
 
