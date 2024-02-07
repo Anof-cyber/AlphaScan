@@ -124,13 +124,8 @@ public class CriticalIssues implements IScannerCheck {
             byte[] request = base_pair.getRequest();
             String request_string = helper.bytesToString(request);
             String request_body = request_string.substring(bodyOffset);
-            URL requestUrl = helper.analyzeRequest(base_pair.getRequest()).getUrl();
+            URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
 
-            String cookieConfig = Config.getConfigValue("CookieHeader");
-
-            if (cookieConfig == null) {
-                return issues;
-            }
 
             if (isStaticResource(requestUrl)) {
                 return issues;
