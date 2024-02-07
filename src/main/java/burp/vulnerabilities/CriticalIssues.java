@@ -134,7 +134,7 @@ public class CriticalIssues implements IScannerCheck {
                 callbacks.printOutput("Static file");
                 return issues;
             }
-            if (orignal_status != 200 && orignal_status != 201) {
+            if (!orignal_status.equals((short) 200) && !orignal_status.equals((short) 201)) {
                 callbacks.printOutput("Status Code is 200 or 201");
                 callbacks.printOutput(String.valueOf(orignal_status));
                 return issues;
