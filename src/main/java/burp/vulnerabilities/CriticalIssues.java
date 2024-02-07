@@ -136,11 +136,12 @@ public class CriticalIssues implements IScannerCheck {
             }
             if (orignal_status != 200 || orignal_status != 201) {
                 callbacks.printOutput("Status Code is 200 or 201");
+                callbacks.printOutput(String.valueOf(orignal_status));
                 return issues;
             }
 
 
-
+            callbacks.printOutput("Orignal Status Code 200");
             headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
             headers.add("Scanner: AlphaScan");
 
