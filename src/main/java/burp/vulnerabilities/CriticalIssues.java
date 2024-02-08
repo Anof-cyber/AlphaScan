@@ -53,9 +53,9 @@ public class CriticalIssues implements IScannerCheck {
             issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
         };
         
-        //issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
-        //issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
-        //issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
+        issues.addAll(AWS_SSRF(baseRequestResponse,insertionPoint));
+        issues.addAll(TimeSQL(baseRequestResponse, insertionPoint));
+        issues.addAll(ErrorSQLInjection(baseRequestResponse, insertionPoint));
         
         return issues;
     }

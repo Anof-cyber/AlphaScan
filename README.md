@@ -26,6 +26,7 @@ This project is currently under active development. Not all features are impleme
 | Missing HSTS Header            |                                                                                                                      |
 | Check If Request with Body support XML Content Type Header |                                                                                                            |
 | Verify session cookie or token | Not Part of Active or Passive Scan, Need to be validated before starting a scan through right click menu on any request with a valid session (Not expired) |
+| Forced Browsing| Experimental, likely to be false positive|
 
 <br>
 

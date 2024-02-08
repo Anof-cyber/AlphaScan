@@ -12,7 +12,7 @@ import burp.utility.Config;
 import javax.swing.JMenuItem;
 
 import burp.vulnerabilities.CriticalIssues;
-import burp.vulnerabilities.Low_Hanging;
+import burp.vulnerabilities.HostIssues;
 import burp.vulnerabilities.RequestIssues;
 import burp.vulnerabilities.SSTI;
 
@@ -21,7 +21,7 @@ import burp.vulnerabilities.SSTI;
  * @author AnoF
  */
 public class BurpExtender implements IBurpExtender {
-    private Low_Hanging lowHangingScanner;
+    private HostIssues lowHangingScanner;
     private CriticalIssues criticalIssuesScanner;
     private RequestIssues hostbasedscanner;
     private SSTI sstiIssuesScanner;
@@ -41,7 +41,7 @@ public class BurpExtender implements IBurpExtender {
         Config.setConfigValue("ChromeDriverPath", null);
         Config.setConfigValue("IsXSS", String.valueOf(false));
 
-        lowHangingScanner = new Low_Hanging(callbacks, helpers);
+        lowHangingScanner = new HostIssues(callbacks, helpers);
         criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
         hostbasedscanner = new RequestIssues(callbacks,helpers);
         sstiIssuesScanner = new SSTI(callbacks, helpers);
@@ -72,6 +72,7 @@ public class BurpExtender implements IBurpExtender {
             }
         });
 
+        /// Remove Session Cookie added my macro for forced browsing
         callbacks.registerHttpListener(new IHttpListener() {
             
             @Override
