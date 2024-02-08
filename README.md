@@ -2,8 +2,9 @@
 A BurpSuite extension for vulnerability Scanning
 
 
+### 🚧 Under Development 🚧
 
-
+This project is currently under active development. Not all features are implemented, and the code may not be stable. While contributions are appreciated, please note that I am not currently accepting external contributions.
 
 
 ## Vulnerabilities
