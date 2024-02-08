@@ -37,6 +37,8 @@ public class HostIssues implements IScannerCheck {
         issues.addAll(Check_CSP(baseRequestResponse));
         issues.addAll(Check_HSTS(baseRequestResponse));
         issues.addAll(Check_Xframe(baseRequestResponse));
+        issues.addAll(Check_Http_Only(baseRequestResponse));
+        issues.addAll(Check_Secure(baseRequestResponse));
         scannedhosts.add(host);
 
         return issues;
@@ -110,11 +112,46 @@ public class HostIssues implements IScannerCheck {
                 }
             }
         }
-    
-        
+        return issues;
+    }
 
 
+    public ArrayList < IScanIssue > Check_Secure(IHttpRequestResponse base_pair) {
+        ArrayList < IScanIssue > issues = new ArrayList<>();
 
+        String cookieHeader = Config.getConfigValue("CookieHeader");
+        List < String > response_headers = helper.analyzeResponse(base_pair.getResponse()).getHeaders(); 
+
+        // Extract the names of cookies from the cookieHeader
+        List<String> cookieNames = extractCookieNames(cookieHeader);
+
+        // Check if Set-Cookie header is present in the response headers
+        List<String> setCookieHeaders = getSetCookieHeaders(response_headers);
+
+
+        for (String setCookieHeader : setCookieHeaders) {
+            // Extract cookie names from the Set-Cookie header
+            List<String> setCookieNames = extractCookieNames(setCookieHeader);
+            
+            // Check if any of the cookie names from cookieHeader match with those in the Set-Cookie header
+            for (String cookieName : cookieNames) {
+                if (setCookieNames.contains(cookieName)) {
+                    // Check if the cookie has the Secure flag set
+                    if (!isAttributePresent(setCookieHeader, cookieName,"Secure")) {
+                        // Raise issue if Secure flag is not set
+                        issues.add(new RaiseVuln(
+                                    base_pair.getHttpService(),
+                                    callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
+                                    new IHttpRequestResponse[] { base_pair },
+                                    "AlphaScan - Missing Secure Flag",
+                                    "The cookie '" + cookieName + "' does not have the Secure flag set.",
+                                    "Certain",
+                                    "Information"
+                                ));
+                    }
+                }
+            }
+        }
         return issues;
     }
 

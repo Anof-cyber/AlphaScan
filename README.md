@@ -13,7 +13,7 @@ This project is currently under active development. Not all features are impleme
 
 ###### Version  1.0
 
-| Vulnerability                   | Payloads                                                                                                             |
+| Vulnerability                   | Details                                                                                                             |
 |--------------------------------|----------------------------------------------------------------------------------------------------------------------|
 | Blind Time Based Injection     | [Payloads](https://github.com/CyberM0nster/SQL-Injection-Payload-List-/blob/master/Generic%20Time%20Based%20SQL%20Injection%20Payloads)                                  |
 | AWS SSRF                       | [Payloads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md#ssrf-url-for-cloud-instances)                        |
@@ -24,9 +24,11 @@ This project is currently under active development. Not all features are impleme
 | CSP Header Missing Required Directives |                                                                                                            |
 | Missing X-Frame Header         |                                                                                                                      |
 | Missing HSTS Header            |                                                                                                                      |
-| Check If Request with Body support XML Content Type Header |                                                                                                            |
+| Check If Request with Body support XML Content Type Header |   Partial/ Could be False Positive, will be updated later                                                                                               |
 | Verify session cookie or token | Not Part of Active or Passive Scan, Need to be validated before starting a scan through right click menu on any request with a valid session (Not expired) |
-| Forced Browsing| Experimental, likely to be false positive|
+| Forced Browsing | Experimental, likely to be false positive|
+| Session Identifier (HTTP Only Flag) | Only Available if Session Identifier is found|
+| Session Identifier (Secure Flag) | Only Available if Session Identifier is found|
 
 <br>
 
