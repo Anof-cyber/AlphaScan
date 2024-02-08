@@ -10,6 +10,7 @@ import burp.IResponseInfo;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
+import burp.utility.Config;
 import burp.utility.MatchChecker;
 import burp.utility.RaiseVuln;
 
@@ -71,6 +72,50 @@ public class HostIssues implements IScannerCheck {
         } else {
             return 0;
         }
+    }
+
+    public ArrayList < IScanIssue > Check_Http_Only(IHttpRequestResponse base_pair) {
+        ArrayList < IScanIssue > issues = new ArrayList<>();
+
+        String cookieHeader = Config.getConfigValue("CookieHeader");
+        List < String > response_headers = helper.analyzeResponse(base_pair.getResponse()).getHeaders(); 
+
+        // Extract the names of cookies from the cookieHeader
+        List<String> cookieNames = extractCookieNames(cookieHeader);
+
+        // Check if Set-Cookie header is present in the response headers
+        List<String> setCookieHeaders = getSetCookieHeaders(response_headers);
+
+
+        for (String setCookieHeader : setCookieHeaders) {
+            // Extract cookie names from the Set-Cookie header
+            List<String> setCookieNames = extractCookieNames(setCookieHeader);
+            
+            // Check if any of the cookie names from cookieHeader match with those in the Set-Cookie header
+            for (String cookieName : cookieNames) {
+                if (setCookieNames.contains(cookieName)) {
+                    // Check if the cookie has the HTTP-only flag set
+                    if (!isAttributePresent(setCookieHeader, cookieName,"HttpOnly")) {
+                        // Raise issue if HTTP-only flag is not set
+                        issues.add(new RaiseVuln(
+                                    base_pair.getHttpService(),
+                                    callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
+                                    new IHttpRequestResponse[] { base_pair },
+                                    "AlphaScan - Missing HTTP-only Flag",
+                                    "The cookie '" + cookieName + "' does not have the HTTP-only flag set.",
+                                    "Certain",
+                                    "Information"
+                                ));
+                    }
+                }
+            }
+        }
+    
+        
+
+
+
+        return issues;
     }
 
     private ArrayList < IScanIssue > Check_CSP(IHttpRequestResponse base_pair) {
@@ -209,6 +254,42 @@ public class HostIssues implements IScannerCheck {
         return issues;
     }
 
+
+
+    private List<String> extractCookieNames(String cookieHeader) {
+        List<String> cookieNames = new ArrayList<>();
+        if (cookieHeader != null && !cookieHeader.isEmpty()) {
+            String[] cookies = cookieHeader.split("; ");
+            for (String cookie : cookies) {
+                String name = cookie.split("=")[0].trim();
+                cookieNames.add(name);
+            }
+        }
+        return cookieNames;
+    }
+
+    // get all set cookie headers
+    private List<String> getSetCookieHeaders(List<String> responseHeaders) {
+        List<String> setCookieHeaders = new ArrayList<>();
+        for (String header : responseHeaders) {
+            if (header.trim().startsWith("Set-Cookie:")) {
+                setCookieHeaders.add(header.trim());
+            }
+        }
+        return setCookieHeaders;
+    }
+
+
+    private boolean isAttributePresent(String setCookieHeader, String cookieName, String attributeName) {
+        // Extract the specified attribute for the specified cookie
+        String[] cookieParts = setCookieHeader.split("; ");
+        for (String part : cookieParts) {
+            if (part.trim().startsWith(cookieName) && part.trim().contains(attributeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     
 
 }
