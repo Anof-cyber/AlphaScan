@@ -80,14 +80,20 @@ public class BurpExtender implements IBurpExtender {
             boolean messageIsRequest,
             IHttpRequestResponse messageInfo) {
                 if (messageIsRequest) {
-
+                    String cookieHeader = Config.getConfigValue("CookieHeader");
                     List<String> headers = helpers.analyzeRequest(messageInfo.getRequest()).getHeaders();
                     IRequestInfo analyzedRequest = helpers.analyzeRequest(messageInfo);
                     int request_body_offset = analyzedRequest.getBodyOffset();
                     byte[] request = messageInfo.getRequest();
                     String request_string = helpers.bytesToString(request);
                     String request_body = request_string.substring(request_body_offset);
-                    headers.removeIf(header -> header.toLowerCase().startsWith("scanner:"));
+                    List<String> updatedHeaders = new ArrayList<>();
+                    for (String header : headers) {
+                        if (header.toLowerCase().startsWith("scanner:")) {
+                            headers.remove("scanner:");
+                        }
+                    }
+
 
                     byte[] modifiedRequest = helpers.buildHttpMessage(headers, helpers.stringToBytes(request_body));
                     messageInfo.setRequest(modifiedRequest);

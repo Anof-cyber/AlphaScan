@@ -18,6 +18,7 @@ import burp.IScannerInsertionPoint;
 import burp.utility.Config;
 import burp.utility.MatchChecker;
 import burp.utility.RaiseVuln;
+import burp.utility.CookieUtils;
 
 public class RequestIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
@@ -94,9 +95,9 @@ public class RequestIssues implements IScannerCheck {
                 return issues;
             }
 
-            boolean allCookiesPresent = areAllCookiesPresent(cookieHeader, headers);
+            List<String> allCookiesPresent = CookieUtils.areAllCookiesPresent(cookieHeader, headers);
 
-            if (!allCookiesPresent) {
+            if (allCookiesPresent.isEmpty()) {
                 return issues;
             }
 
@@ -218,63 +219,7 @@ public class RequestIssues implements IScannerCheck {
         return false; // Request is not for a static resource
     }
 
-    public boolean areAllCookiesPresent(String cookieHeader, List<String> headers) {
-        if (cookieHeader == null) {
-            return false;
-        }
     
-        // Check if "Cookie" header is present
-        boolean cookieHeaderPresent = false;
-        for (String header : headers) {
-            if (header.trim().startsWith("Cookie:")) {
-                cookieHeaderPresent = true;
-                break;
-            }
-        }
-    
-        // If "Cookie" header is not present, return false
-        if (!cookieHeaderPresent) {
-            return false;
-        }
-    
-        // Split the cookieHeader into individual cookies
-        String[] cookies = cookieHeader.split("; ");
-    
-        // Get request headers
-        List<String> cookieValues = new ArrayList<>();
-        for (String header : headers) {
-            if (header.trim().startsWith("Cookie:")) {
-                String[] cookieParts = header.trim().substring(7).split(";");
-                for (String cookiePart : cookieParts) {
-                    cookieValues.add(cookiePart.split("=")[0].trim());
-                }
-                break;
-            }
-        }
-    
-        // Check if all cookie names in cookieHeader are present in the request
-        for (String cookie : cookies) {
-            // Extract cookie name
-            String cookieName = cookie.split("=")[0].trim();
-    
-            // Check if the cookie name is present in the request cookie values
-            boolean cookiePresent = false;
-            for (String value : cookieValues) {
-                if (value.equals(cookieName)) {
-                    cookiePresent = true;
-                    break;
-                }
-            }
-    
-            // If any cookie is not present, return false
-            if (!cookiePresent) {
-                return false;
-            }
-        }
-    
-        // If all cookies are present, return true
-        return true;
-    }
     
 
 }
