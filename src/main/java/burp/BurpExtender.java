@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 
 import burp.vulnerabilities.CriticalIssues;
 import burp.vulnerabilities.Low_Hanging;
+import burp.vulnerabilities.RequestIssues;
 import burp.vulnerabilities.SSTI;
 
 /**
@@ -22,6 +23,7 @@ import burp.vulnerabilities.SSTI;
 public class BurpExtender implements IBurpExtender {
     private Low_Hanging lowHangingScanner;
     private CriticalIssues criticalIssuesScanner;
+    private RequestIssues hostbasedscanner;
     private SSTI sstiIssuesScanner;
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
@@ -41,11 +43,13 @@ public class BurpExtender implements IBurpExtender {
 
         lowHangingScanner = new Low_Hanging(callbacks, helpers);
         criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
+        hostbasedscanner = new RequestIssues(callbacks,helpers);
         sstiIssuesScanner = new SSTI(callbacks, helpers);
 
         // Register scanner checks
         callbacks.registerScannerCheck(lowHangingScanner);
         callbacks.registerScannerCheck(criticalIssuesScanner);
+        callbacks.registerScannerCheck(hostbasedscanner);
         callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
         String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
