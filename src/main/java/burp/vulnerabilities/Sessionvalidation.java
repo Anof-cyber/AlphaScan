@@ -19,6 +19,7 @@ public class Sessionvalidation {
 
     private IExtensionHelpers helpers;
     private IBurpExtenderCallbacks callbacks;
+    private static final List<String> AUTH_LIST = Arrays.asList("API","Authorization","X-Api-Key");
     
     public Sessionvalidation(IBurpExtenderCallbacks callbacks, IExtensionHelpers helpers) {
         this.callbacks = callbacks;
@@ -43,6 +44,7 @@ public class Sessionvalidation {
             case HEADER:
                 // Handle authentication using headers
                 // handleHeaderAuthentication(messages);
+                validate_token(messages);
                 
                 break;
             case COOKIE:
@@ -103,6 +105,75 @@ public class Sessionvalidation {
         }
         return false;
     }
+
+    void validate_token(IHttpRequestResponse message) {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                IRequestInfo analyzedRequest = helpers.analyzeRequest(message);
+            List<String> headers = analyzedRequest.getHeaders();
+            Short status_code = helpers.analyzeResponse(message.getResponse()).getStatusCode();
+            int request_body_offset = analyzedRequest.getBodyOffset();
+            byte[] request = message.getRequest();
+            String request_string = helpers.bytesToString(request);
+            String request_body = request_string.substring(request_body_offset);
+            MatchChecker matchChecker = new MatchChecker(helpers);
+            List<String> duplicate_header = headers;
+
+            
+
+            
+
+
+            for (String header : headers) {
+                for (String authHeader : AUTH_LIST) {
+                    if (header.trim().toLowerCase().startsWith(authHeader.toLowerCase() + ":")) {
+                        duplicate_header.remove(authHeader);
+                        
+                        byte[] modifiedRequest = helpers.buildHttpMessage(duplicate_header, helpers.stringToBytes(request_body));
+                        IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest );
+                        Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
+                        if (status_code == modified_status_code) {
+
+                            callbacks.issueAlert("The" + authHeader + "header is not not used for auth");
+                        }
+                        else {
+                            callbacks.issueAlert(authHeader + "Header is used for auth");
+                            List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
+                            List < int[] > matches2 = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(header), helpers);
+                            Config.setConfigValue("AuthHeader", header);
+                            callbacks.addScanIssue(new RaiseVuln(
+                                message.getHttpService(),
+                                callbacks.getHelpers().analyzeRequest(message).getUrl(),
+                                new IHttpRequestResponse[] {
+                                    message,
+                                    callbacks.applyMarkers(modifiedMessage, matches2, matches)
+                                },
+                            "AlphaScan - Session Identifier Found",
+                            "The request Token found to be used as session. <br>" + header,
+                            "Certain",
+                            "Information"
+                            ));
+                            break; // No need to continue checking once a match is found , assuuming only 1 is possible.
+                        };
+                         
+                    }
+                }
+            }
+            
+
+
+
+                return null;
+
+
+            }
+        };
+        worker.execute();
+
+    }
+
+
 
   void validate_cookie(IHttpRequestResponse message) {
     SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
