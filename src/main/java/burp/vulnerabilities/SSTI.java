@@ -52,7 +52,6 @@ public class SSTI implements IScannerCheck {
         String engine = patternchecks.identifyVulnerability(helper.bytesToString(updatedRequestResponse.getResponse()));
         if (engine != null) {
 
-            callbacks.printOutput(engine);
             SSTI CurrentObject = new SSTI();
 
             try {

@@ -1,8 +1,6 @@
 package burp.utility;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import java.time.Duration;
 
 public class SeleniumHandler {
     private WebDriver driver;

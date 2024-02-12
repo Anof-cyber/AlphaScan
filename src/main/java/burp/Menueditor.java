@@ -2,20 +2,8 @@ package burp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import javax.swing.WindowConstants;
-import org.openqa.selenium.Dimension;
-import burp.utility.Config;
 import burp.vulnerabilities.Sessionvalidation;
 
 public class Menueditor implements IContextMenuFactory {
@@ -55,7 +43,6 @@ public class Menueditor implements IContextMenuFactory {
         }
 
         //Sessionvalidation sessionValidation = new Sessionvalidation();
-        callbacks.printOutput("Checking cookie");
        // sessionValidation.processRequest(messages[0]);
        session_validation = new Sessionvalidation(callbacks, helpers);
        session_validation.processRequest(messages[0]);

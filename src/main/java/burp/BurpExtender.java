@@ -4,12 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import burp.IBurpExtender;
-import burp.IBurpExtenderCallbacks;
-import burp.IExtensionHelpers;
-import burp.ITab;
 import burp.utility.Config;
-import javax.swing.JMenuItem;
 
 import burp.vulnerabilities.CriticalIssues;
 import burp.vulnerabilities.HostIssues;
@@ -35,6 +30,7 @@ public class BurpExtender implements IBurpExtender {
         callbacks.setExtensionName("AlphaScan");
         callbacks.printOutput("Author: Sourav Kalal");
         callbacks.printOutput("Version 0.1");
+        callbacks.printOutput("https://github.com/Anof-cyber/AlphaScan");
         stdout = new PrintWriter(callbacks.getStdout(), true);
         stderr = new PrintWriter(callbacks.getStderr(), true);
         helpers = callbacks.getHelpers();

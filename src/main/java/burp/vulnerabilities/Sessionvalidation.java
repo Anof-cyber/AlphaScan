@@ -215,7 +215,6 @@ public class Sessionvalidation {
                         else {
                            // Assume this cookie is required along with other cookies. 
                            // add it to array to analysis later
-                           callbacks.printOutput("Looks this cookie is required along with other cookies" + cookie);
                            requiredCookies.add(cookie);
                         }
                         }

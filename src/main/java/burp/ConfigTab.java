@@ -7,7 +7,6 @@ import java.io.File;
 
 import burp.utility.Config;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -134,7 +133,7 @@ public class ConfigTab extends javax.swing.JPanel {
             
         } catch (Exception e) {
             e.printStackTrace();
-            callback.printOutput("Exception occurred: " + e.getMessage());
+            callback.printError("Exception occurred: " + e.getMessage());
             SwingUtilities.invokeLater(() -> {
                 JOptionPane.showMessageDialog(null, "Exception occurred: " + "Error, Check the Extension tab for more details", "Error", JOptionPane.ERROR_MESSAGE);
             });

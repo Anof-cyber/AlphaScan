@@ -76,7 +76,6 @@ public class RequestIssues implements IScannerCheck {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         String cookieHeader = Config.getConfigValue("CookieHeader");
-        callbacks.printOutput(cookieHeader);
         if (cookieHeader != null) {
             Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
             List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
