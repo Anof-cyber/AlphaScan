@@ -94,16 +94,16 @@ public class RequestIssues implements IScannerCheck {
                 return issues;
             }
 
-            List<String> allCookiesPresent = CookieUtils.areAllCookiesPresent(cookieHeader, headers);
+            List<String> updated_headers = CookieUtils.areAllCookiesPresent(cookieHeader, headers);
 
-            if (allCookiesPresent.isEmpty()) {
+            if (updated_headers.isEmpty()) {
                 return issues;
             }
 
-            headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
-            headers.add("Scanner: AlphaScan");
+            //headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
+            updated_headers.add("Scanner: AlphaScan");
 
-            byte[] modifiedRequest = helper.buildHttpMessage(headers, helper.stringToBytes(request_body));
+            byte[] modifiedRequest = helper.buildHttpMessage(updated_headers, helper.stringToBytes(request_body));
             IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(base_pair.getHttpService(), modifiedRequest);
             Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import burp.utility.Config;
-
+import burp.utility.CookieUtils;
 import burp.vulnerabilities.CriticalIssues;
 import burp.vulnerabilities.HostIssues;
 import burp.vulnerabilities.RequestIssues;
@@ -83,23 +83,20 @@ public class BurpExtender implements IBurpExtender {
                     byte[] request = messageInfo.getRequest();
                     String request_string = helpers.bytesToString(request);
                     String request_body = request_string.substring(request_body_offset);
-                    List<String> updatedHeaders = new ArrayList<>();
-                    for (String header : headers) {
-                        if (header.toLowerCase().startsWith("scanner:")) {
-                            headers.remove("scanner:");
-                        }
+                    
+                    // If header as Scanner header, remove the cookies again incase added by macro
+                    if (headers.contains("Scanner")) {
+                        List<String> updated_headers = CookieUtils.areAllCookiesPresent(cookieHeader, headers);
+
+                        if (!updated_headers.isEmpty()) {
+
+                            updated_headers.remove("Scanner");
+                            byte[] modifiedRequest = helpers.buildHttpMessage(updated_headers, helpers.stringToBytes(request_body));
+                            messageInfo.setRequest(modifiedRequest);
+                        }      
                     }
-
-
-                    byte[] modifiedRequest = helpers.buildHttpMessage(headers, helpers.stringToBytes(request_body));
-                    messageInfo.setRequest(modifiedRequest);
-
-
-            }
-
-
+                }
             }
         });
-
     }
 }
