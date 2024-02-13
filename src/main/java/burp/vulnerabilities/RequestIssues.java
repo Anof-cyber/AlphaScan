@@ -112,7 +112,7 @@ public class RequestIssues implements IScannerCheck {
             if (header.trim().toLowerCase().startsWith(headerNameAuthHeader.toLowerCase() + ":")) {
                 
                 headerExists = true;
-                duplicate_headers.remove(headerNameAuthHeader);
+                duplicate_headers.removeIf(header_value  -> header_value.equalsIgnoreCase(headerNameAuthHeader));
                 break; 
             }
         }

@@ -129,7 +129,7 @@ public class Sessionvalidation {
             for (String header : headers) {
                 for (String authHeader : AUTH_LIST) {
                     if (header.trim().toLowerCase().startsWith(authHeader.toLowerCase() + ":")) {
-                        duplicate_header.remove(authHeader);
+                        duplicate_header.removeIf(header_value  -> header_value.equalsIgnoreCase(authHeader));
                         
                         byte[] modifiedRequest = helpers.buildHttpMessage(duplicate_header, helpers.stringToBytes(request_body));
                         IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest );
