@@ -191,6 +191,8 @@ dbErrorPatterns.put("all", new String[] {
         "Stack Trace",
         "Unhandled exception",
         "ASP.NET Version",
+        "([A-Za-z]{1,32}\\.)+[A-Za-z]{0,32}\\(([A-Za-z0-9]+\\s+[A-Za-z0-9]+[,\\s]*)*\\)\\s+\\+{1}\\d+",
+        "--- End of inner exception stack trace ---",
         // Java web application verbose error patterns
         "java.lang.Exception",
         "javax.servlet.ServletException",
