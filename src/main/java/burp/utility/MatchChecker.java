@@ -231,7 +231,9 @@ dbErrorPatterns.put("all", new String[] {
         "Stack Trace",
         "Unhandled exception",
         "API Version",
-        "Server: .*"
+        "Server: .*",
+        "TemplateDoesNotExist",
+        "Django"
     });
     
     }

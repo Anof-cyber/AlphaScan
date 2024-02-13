@@ -46,9 +46,9 @@ public class BurpExtender implements IBurpExtender {
         //sstiIssuesScanner = new SSTI(callbacks, helpers);
 
         // Register scanner checks
-        callbacks.registerScannerCheck(HostScanner);
-        callbacks.registerScannerCheck(criticalIssuesScanner);
-        callbacks.registerScannerCheck(requestbasedscanner);
+        //callbacks.registerScannerCheck(HostScanner);
+        //callbacks.registerScannerCheck(criticalIssuesScanner);
+        //callbacks.registerScannerCheck(requestbasedscanner);
         callbacks.registerScannerCheck(generalbasescanner);
         //callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));

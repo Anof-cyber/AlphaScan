@@ -25,8 +25,10 @@ public class ErrorMessage {
         List<int[]> matches = matchChecker.getSqlMatches(base_pair.getResponse());
         List<int[]> errormatchs = matchChecker.geterrormessage(base_pair.getResponse());
 
-        if (matches.isEmpty() || errormatchs.isEmpty()) {
+        if (matches.isEmpty()) {
+            if (errormatchs.isEmpty()) {
             return issues;
+            }
         }
         List<int[]> combinedMatches = new ArrayList<>(matches);
         combinedMatches.addAll(errormatchs);
