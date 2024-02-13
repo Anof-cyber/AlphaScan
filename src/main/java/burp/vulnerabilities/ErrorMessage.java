@@ -42,7 +42,7 @@ public class ErrorMessage {
                     "AlphaScan - Error Message Detected",
                     "The application might be exposing error messages. The scanner detected potential error message patterns in the response. Please investigate further to confirm the source and implications of these error messages.",
                     "Certain",
-                    "High"
+                    "Low"
             ));
 
         return issues;

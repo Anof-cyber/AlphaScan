@@ -230,7 +230,8 @@ dbErrorPatterns.put("all", new String[] {
         "Error Message",
         "Stack Trace",
         "Unhandled exception",
-        "API Version"
+        "API Version",
+        "Server: .*"
     });
     
     }
