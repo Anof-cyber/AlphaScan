@@ -64,7 +64,7 @@ public class BurpExtender implements IBurpExtender {
 
             @Override
             public java.awt.Component getUiComponent() {
-                return configTab; // Display your ConfigTab in the Burp UI
+                return configTab; // Display ConfigTab in the Burp UI
             }
         });
 
