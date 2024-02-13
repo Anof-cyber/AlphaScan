@@ -239,7 +239,7 @@ dbErrorPatterns.put("all", new String[] {
 
         List<int[]> allMatches = new ArrayList<>();
         for (String errorPattern : errorPatterns.get("Common")) {
-            allMatches.addAll(getMatches2(response, errorPattern));
+            allMatches.addAll(getMatches_regex(response, errorPattern));
         }
         return allMatches;
     }
@@ -272,7 +272,7 @@ dbErrorPatterns.put("all", new String[] {
     }
 
 
-    public static List<int[]> getMatches2(byte[] response, String regex) {
+    public static List<int[]> getMatches_regex(byte[] response, String regex) {
         List<int[]> matches = new ArrayList<>();
 
         Pattern pattern = Pattern.compile(regex);
