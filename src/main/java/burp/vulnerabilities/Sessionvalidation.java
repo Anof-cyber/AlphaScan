@@ -119,19 +119,17 @@ public class Sessionvalidation {
             String request_string = helpers.bytesToString(request);
             String request_body = request_string.substring(request_body_offset);
             MatchChecker matchChecker = new MatchChecker(helpers);
-            List<String> duplicate_header = headers;
-
+            //List<String> duplicate_header = headers;
+            List<String> duplicate_header = analyzedRequest.getHeaders();
             
 
-            
-
-
-            for (String header : headers) {
-                for (String authHeader : AUTH_LIST) {
-                    if (header.trim().toLowerCase().startsWith(authHeader.toLowerCase() + ":")) {
-                        duplicate_header.removeIf(header_value  -> header_value.equalsIgnoreCase(authHeader));
+            for (String authHeader : AUTH_LIST) {
+                for (String header : headers) {
+                    if (header.toLowerCase().startsWith(authHeader.toLowerCase())) {
+                        duplicate_header.remove(header);
                         
                         byte[] modifiedRequest = helpers.buildHttpMessage(duplicate_header, helpers.stringToBytes(request_body));
+                        callbacks.printOutput(helpers.bytesToString(modifiedRequest));
                         IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(message.getHttpService(), modifiedRequest );
                         Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
                         if (status_code == modified_status_code) {

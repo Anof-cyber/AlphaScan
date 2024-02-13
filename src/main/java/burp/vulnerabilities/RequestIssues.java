@@ -96,7 +96,7 @@ public class RequestIssues implements IScannerCheck {
         String request_body = request_string.substring(bodyOffset);
         URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
         String headerNameAuthHeader = authHeader.split(":")[0].trim();
-        List<String> duplicate_headers = headers;
+        List<String> duplicate_headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
         boolean headerExists = false;
         
 
@@ -112,7 +112,7 @@ public class RequestIssues implements IScannerCheck {
             if (header.trim().toLowerCase().startsWith(headerNameAuthHeader.toLowerCase() + ":")) {
                 
                 headerExists = true;
-                duplicate_headers.removeIf(header_value  -> header_value.equalsIgnoreCase(headerNameAuthHeader));
+                duplicate_headers.remove(header);
                 break; 
             }
         }
