@@ -1,0 +1,56 @@
+package burp.vulnerabilities;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import burp.IBurpExtenderCallbacks;
+import burp.IExtensionHelpers;
+import burp.IHttpRequestResponse;
+import burp.IScanIssue;
+import burp.IScannerCheck;
+import burp.IScannerInsertionPoint;
+
+public class GeneralScanner implements IScannerCheck {
+
+    private IBurpExtenderCallbacks callbacks;
+    private IExtensionHelpers helper;
+    ErrorMessage errorMessage = new ErrorMessage();
+
+
+    public GeneralScanner(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+        this.callbacks = callbacks;
+        this.helper = helper;
+    }
+
+
+
+
+    @Override
+    public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+        issues.addAll(errorMessage.Check_Errors(baseRequestResponse));
+        
+
+        return issues;
+    }
+
+    @Override
+    public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+        return issues;
+    }
+
+    @Override
+    public int consolidateDuplicateIssues(IScanIssue existingIssue, IScanIssue newIssue) {
+
+        if (existingIssue.getIssueName().equals(newIssue.getIssueName())) {
+            return 1;
+
+        } else {
+            return 0;
+        }
+    }
+    
+}
+
+

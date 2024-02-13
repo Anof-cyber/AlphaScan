@@ -8,11 +8,13 @@ import burp.IExtensionHelpers;
 public class MatchChecker {
 
     private Map<String, String[]> dbErrorPatterns;
+    private Map<String, String[]> errorPatterns;
     private IExtensionHelpers helper;
 
     public MatchChecker(IExtensionHelpers helper) {
         this.helper = helper;
         this.dbErrorPatterns = new HashMap<>();
+        this.errorPatterns = new HashMap<>();
 
         // Populate the map with combined error patterns
     // Populate the map with combined error patterns
@@ -175,8 +177,71 @@ dbErrorPatterns.put("all", new String[] {
     "java.lang.IllegalArgumentException: Invalid SQL statement (.*)",
     "javax.naming.NamingException: Cannot create connection to database server (.*)"
 
-});   
+    });   
+
+    errorPatterns.put("Common", new String[] {
+        // ASP.NET verbose error patterns
+        "Detailed Error Information",
+        "Server Error in '/' Application",
+        "Runtime Error",
+        "Stack Trace",
+        "Unhandled exception",
+        "ASP.NET Version",
+        // Java web application verbose error patterns
+        "java.lang.Exception",
+        "javax.servlet.ServletException",
+        "Root Cause",
+        "Stack Trace",
+        "Unhandled exception",
+        "Java Version",
+        // Node.js verbose error patterns
+        "Error: ",
+        "at ",
+        "Stack Trace",
+        "Unhandled exception",
+        "Node.js Version",
+        // Tomcat verbose error patterns
+        "SEVERE:",
+        "WARNING:",
+        "Stack Trace",
+        "SEVERE: Exception",
+        "WARNING: Exception",
+        "Error loading WebappClassLoader",
+        "Failed to deploy application",
+        "Context initialization failed",
+        "Tomcat Version",
+        // Apache HTTP Server verbose error patterns
+        "AH",
+        "[error]",
+        "Server Error",
+        "Request exceeded the limit",
+        "Premature end of script headers",
+        "Timeout",
+        "Apache Version",
+        // Nginx web server verbose error patterns
+        "upstream prematurely closed",
+        "failed (111: Connection refused)",
+        "error_page ",
+        "server_name ",
+        "client_max_body_size",
+        "Nginx Version",
+        // Common API verbose error patterns
+        "Detailed Error Information",
+        "Error Message",
+        "Stack Trace",
+        "Unhandled exception",
+        "API Version"
+    });
     
+    }
+
+    public List<int[]> geterrormessage(byte[] response) {
+
+        List<int[]> allMatches = new ArrayList<>();
+        for (String errorPattern : errorPatterns.get("Common")) {
+            allMatches.addAll(getMatches(response, errorPattern.getBytes(), helper));
+        }
+        return allMatches;
     }
 
     public List<int[]> getSqlMatches(byte[] response) {

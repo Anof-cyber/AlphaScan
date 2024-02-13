@@ -9,6 +9,7 @@ import burp.utility.CookieUtils;
 import burp.vulnerabilities.CriticalIssues;
 import burp.vulnerabilities.HostIssues;
 import burp.vulnerabilities.RequestIssues;
+import burp.vulnerabilities.GeneralScanner;
 //import burp.vulnerabilities.SSTI;
 
 /**
@@ -19,6 +20,7 @@ public class BurpExtender implements IBurpExtender {
     private HostIssues HostScanner;
     private CriticalIssues criticalIssuesScanner;
     private RequestIssues requestbasedscanner;
+    private GeneralScanner generalbasescanner;
     //private SSTI sstiIssuesScanner;
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
@@ -40,12 +42,14 @@ public class BurpExtender implements IBurpExtender {
         HostScanner = new HostIssues(callbacks, helpers);
         criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
         requestbasedscanner = new RequestIssues(callbacks,helpers);
+        generalbasescanner = new GeneralScanner(callbacks,helpers);
         //sstiIssuesScanner = new SSTI(callbacks, helpers);
 
         // Register scanner checks
         callbacks.registerScannerCheck(HostScanner);
         callbacks.registerScannerCheck(criticalIssuesScanner);
         callbacks.registerScannerCheck(requestbasedscanner);
+        callbacks.registerScannerCheck(generalbasescanner);
         //callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
         String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
