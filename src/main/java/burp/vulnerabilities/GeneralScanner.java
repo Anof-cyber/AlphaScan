@@ -15,6 +15,8 @@ public class GeneralScanner implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
     ErrorMessage errorMessage = new ErrorMessage();
+    JsonCSRF jsoncsrf = new JsonCSRF();
+
 
 
     public GeneralScanner(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
@@ -37,6 +39,7 @@ public class GeneralScanner implements IScannerCheck {
     @Override
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
+        issues.addAll(jsoncsrf.Check_JSON_CSRF(baseRequestResponse));
         return issues;
     }
 
