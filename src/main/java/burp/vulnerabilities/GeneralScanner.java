@@ -30,6 +30,7 @@ public class GeneralScanner implements IScannerCheck {
     @Override
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
+        callbacks.printOutput("Passive Scanner");
         issues.addAll(errorMessage.Check_Errors(baseRequestResponse));
         
 
