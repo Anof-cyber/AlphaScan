@@ -16,9 +16,9 @@ import burp.vulnerabilities.SSTI;
  * @author AnoF
  */
 public class BurpExtender implements IBurpExtender {
-    private HostIssues lowHangingScanner;
+    private HostIssues HostScanner;
     private CriticalIssues criticalIssuesScanner;
-    private RequestIssues hostbasedscanner;
+    private RequestIssues requestbasedscanner;
     private SSTI sstiIssuesScanner;
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
@@ -37,16 +37,16 @@ public class BurpExtender implements IBurpExtender {
         Config.setConfigValue("ChromeDriverPath", null);
         Config.setConfigValue("IsXSS", String.valueOf(false));
 
-        lowHangingScanner = new HostIssues(callbacks, helpers);
-        criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
-        hostbasedscanner = new RequestIssues(callbacks,helpers);
-        sstiIssuesScanner = new SSTI(callbacks, helpers);
+        //HostScanner = new HostIssues(callbacks, helpers);
+        //criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
+        requestbasedscanner = new RequestIssues(callbacks,helpers);
+        //sstiIssuesScanner = new SSTI(callbacks, helpers);
 
         // Register scanner checks
-        callbacks.registerScannerCheck(lowHangingScanner);
-        callbacks.registerScannerCheck(criticalIssuesScanner);
-        callbacks.registerScannerCheck(hostbasedscanner);
-        callbacks.registerScannerCheck(sstiIssuesScanner);
+        //callbacks.registerScannerCheck(HostScanner);
+        //callbacks.registerScannerCheck(criticalIssuesScanner);
+        callbacks.registerScannerCheck(requestbasedscanner);
+        //callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
         String chromeDriverPath = callbacks.loadExtensionSetting("ChromeDriverPath");
         if (chromeDriverPath != null && !chromeDriverPath.isEmpty()) {
