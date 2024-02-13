@@ -1,6 +1,7 @@
 package burp.vulnerabilities;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -127,13 +128,16 @@ public class RequestIssues implements IScannerCheck {
         Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
 
         if (orignal_status.equals(modified_status_code)) {
+            MatchChecker matchChecker = new MatchChecker(helper);
+            List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helper);
+                            
 
             issues.add(new RaiseVuln(
             base_pair.getHttpService(),
             callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
             new IHttpRequestResponse[] {
-                base_pair
-                //callbacks.applyMarkers(updated_request_response, requestHighlights, matches)
+                base_pair,
+                callbacks.applyMarkers(modifiedMessage, null, matches)
             },
             "AlphaScan - Forced Browsing",
             "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL accessing.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
@@ -185,12 +189,15 @@ public class RequestIssues implements IScannerCheck {
 
             if (orignal_status.equals(modified_status_code)) {
 
+                MatchChecker matchChecker = new MatchChecker(helper);
+                List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helper);
+
                 issues.add(new RaiseVuln(
                 base_pair.getHttpService(),
                 callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
                 new IHttpRequestResponse[] {
-                    base_pair
-                    //callbacks.applyMarkers(updated_request_response, requestHighlights, matches)
+                    base_pair,
+                    callbacks.applyMarkers(modifiedMessage, null, matches)
                 },
                 "AlphaScan - Forced Browsing",
                 "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL accessing.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
