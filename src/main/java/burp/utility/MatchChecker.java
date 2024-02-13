@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import burp.IExtensionHelpers;
 
 public class MatchChecker {
@@ -195,8 +199,6 @@ dbErrorPatterns.put("all", new String[] {
         "Unhandled exception",
         "Java Version",
         // Node.js verbose error patterns
-        "Error: ",
-        "at ",
         "Stack Trace",
         "Unhandled exception",
         "Node.js Version",
@@ -211,12 +213,7 @@ dbErrorPatterns.put("all", new String[] {
         "Context initialization failed",
         "Tomcat Version",
         // Apache HTTP Server verbose error patterns
-        "AH",
-        "[error]",
         "Server Error",
-        "Request exceeded the limit",
-        "Premature end of script headers",
-        "Timeout",
         "Apache Version",
         // Nginx web server verbose error patterns
         "upstream prematurely closed",
@@ -242,7 +239,7 @@ dbErrorPatterns.put("all", new String[] {
 
         List<int[]> allMatches = new ArrayList<>();
         for (String errorPattern : errorPatterns.get("Common")) {
-            allMatches.addAll(getMatches(response, errorPattern.getBytes(), helper));
+            allMatches.addAll(getMatches2(response, errorPattern));
         }
         return allMatches;
     }
@@ -269,6 +266,23 @@ dbErrorPatterns.put("all", new String[] {
             int[] matchIndices = { start, start + matchLen };
             matches.add(matchIndices);
             start += matchLen;
+        }
+
+        return matches;
+    }
+
+
+    public static List<int[]> getMatches2(byte[] response, String regex) {
+        List<int[]> matches = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(new String(response));
+
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            int[] matchIndices = { start, end };
+            matches.add(matchIndices);
         }
 
         return matches;

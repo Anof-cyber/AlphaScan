@@ -30,7 +30,6 @@ public class GeneralScanner implements IScannerCheck {
     @Override
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        callbacks.printOutput("Passive Scanner");
         issues.addAll(errorMessage.Check_Errors(baseRequestResponse,callbacks,helper));
         
 
@@ -40,7 +39,7 @@ public class GeneralScanner implements IScannerCheck {
     @Override
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        issues.addAll(jsoncsrf.Check_JSON_CSRF(baseRequestResponse));
+        issues.addAll(jsoncsrf.Check_JSON_CSRF(baseRequestResponse,callbacks,helper));
         return issues;
     }
 

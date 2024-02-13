@@ -21,7 +21,7 @@ public class JsonCSRF {
     private static final List<String> IGNORE_HEADER = Arrays.asList("API","Authorization","X-Api-Key","CSRF","X-CSRF-TOKEN","XSRF-TOKEN");
 
 
-    public ArrayList < IScanIssue > Check_JSON_CSRF(IHttpRequestResponse base_pair) {
+    public ArrayList < IScanIssue > Check_JSON_CSRF(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         byte content_type = helper.analyzeRequest(base_pair).getContentType();
