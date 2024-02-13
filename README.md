@@ -29,7 +29,7 @@ This project is currently under active development. Not all features are impleme
 | Forced Browsing | Experimental, likely to be false positive|
 | Session Identifier (HTTP Only Flag) | Only Available if Session Identifier is found|
 | Session Identifier (Secure Flag) | Only Available if Session Identifier is found|
-| Error Messages| Passive Scanner |
+| Error Messages| Passive Scanner for Error message or Server Banner|
 
 <br>
 
