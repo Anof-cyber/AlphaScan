@@ -19,13 +19,17 @@ public class ErrorMessage {
 
     public ArrayList < IScanIssue > Check_Errors(IHttpRequestResponse base_pair) {
 
+        callbacks.printOutput("Checking matches is empty");
+        callbacks.printOutput(helper.bytesToString(base_pair.getRequest()));
+        callbacks.printOutput("Check");
+
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         MatchChecker matchChecker = new MatchChecker(helper);
         List<int[]> matches = matchChecker.getSqlMatches(base_pair.getResponse());
         List<int[]> errormatchs = matchChecker.geterrormessage(base_pair.getResponse());
 
-        callbacks.printOutput("Checking matches is empty");
+        
         List<int[]> combinedMatches = new ArrayList<>(matches);
         combinedMatches.addAll(errormatchs);
 
