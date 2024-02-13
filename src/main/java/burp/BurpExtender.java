@@ -9,7 +9,7 @@ import burp.utility.CookieUtils;
 import burp.vulnerabilities.CriticalIssues;
 import burp.vulnerabilities.HostIssues;
 import burp.vulnerabilities.RequestIssues;
-import burp.vulnerabilities.SSTI;
+//import burp.vulnerabilities.SSTI;
 
 /**
  *
@@ -19,7 +19,7 @@ public class BurpExtender implements IBurpExtender {
     private HostIssues HostScanner;
     private CriticalIssues criticalIssuesScanner;
     private RequestIssues requestbasedscanner;
-    private SSTI sstiIssuesScanner;
+    //private SSTI sstiIssuesScanner;
     private IExtensionHelpers helpers;
     private PrintWriter stdout;
     private PrintWriter stderr;
@@ -37,14 +37,14 @@ public class BurpExtender implements IBurpExtender {
         Config.setConfigValue("ChromeDriverPath", null);
         Config.setConfigValue("IsXSS", String.valueOf(false));
 
-        //HostScanner = new HostIssues(callbacks, helpers);
-        //criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
+        HostScanner = new HostIssues(callbacks, helpers);
+        criticalIssuesScanner = new CriticalIssues(callbacks, helpers);
         requestbasedscanner = new RequestIssues(callbacks,helpers);
         //sstiIssuesScanner = new SSTI(callbacks, helpers);
 
         // Register scanner checks
-        //callbacks.registerScannerCheck(HostScanner);
-        //callbacks.registerScannerCheck(criticalIssuesScanner);
+        callbacks.registerScannerCheck(HostScanner);
+        callbacks.registerScannerCheck(criticalIssuesScanner);
         callbacks.registerScannerCheck(requestbasedscanner);
         //callbacks.registerScannerCheck(sstiIssuesScanner);
         callbacks.registerContextMenuFactory(new Menueditor(callbacks));
@@ -68,6 +68,8 @@ public class BurpExtender implements IBurpExtender {
             }
         });
 
+
+        /* No Longer required 
         /// Remove Session Cookie added my macro for forced browsing
         callbacks.registerHttpListener(new IHttpListener() {
             
@@ -98,5 +100,7 @@ public class BurpExtender implements IBurpExtender {
                 }
             }
         });
+        */
     }
+    
 }

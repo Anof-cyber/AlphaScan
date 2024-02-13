@@ -41,3 +41,8 @@ manifest.mf
 /target/
 /test/
 .vscode/
+
+
+### Temp SSTI removed
+src/main/java/burp/utility/SSTIInjectionPatterns.java
+src/main/java/burp/vulnerabilities/SSTI.java
