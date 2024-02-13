@@ -76,8 +76,84 @@ public class RequestIssues implements IScannerCheck {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         String cookieHeader = Config.getConfigValue("CookieHeader");
+        String authHeader = Config.getConfigValue("AuthHeader");
         if (cookieHeader != null) {
-            Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
+            issues.addAll(Cookie_Forced_Browsing(base_pair,cookieHeader));
+        }
+        else if (authHeader != null) {
+            issues.addAll(Token_Forced_Browsing(base_pair,authHeader));
+        }
+        return issues;
+    }
+
+    public ArrayList <IScanIssue > Token_Forced_Browsing(IHttpRequestResponse base_pair, String authHeader) {
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+        Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
+        List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
+        int bodyOffset = helper.analyzeRequest(base_pair.getRequest()).getBodyOffset();
+        byte[] request = base_pair.getRequest();
+        String request_string = helper.bytesToString(request);
+        String request_body = request_string.substring(bodyOffset);
+        URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
+        String headerNameAuthHeader = authHeader.split(":")[0].trim();
+        List<String> duplicate_headers = headers;
+        boolean headerExists = false;
+        
+
+        if (isStaticResource(requestUrl)) {
+            return issues;
+        }
+
+        if (!orignal_status.equals((short) 200) && !orignal_status.equals((short) 201)) {
+            return issues;
+        }
+
+        for (String header : headers) {
+            if (header.trim().toLowerCase().startsWith(headerNameAuthHeader.toLowerCase() + ":")) {
+                
+                headerExists = true;
+                duplicate_headers.remove(headerNameAuthHeader);
+                break; 
+            }
+        }
+
+        if (!headerExists) {
+            return issues;
+        }
+
+        duplicate_headers.add("Scanner: AlphaScan");
+        byte[] modifiedRequest = helper.buildHttpMessage(duplicate_headers, helper.stringToBytes(request_body));
+        IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(base_pair.getHttpService(), modifiedRequest);
+        Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
+
+        if (orignal_status.equals(modified_status_code)) {
+
+            issues.add(new RaiseVuln(
+            base_pair.getHttpService(),
+            callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
+            new IHttpRequestResponse[] {
+                base_pair
+                //callbacks.applyMarkers(updated_request_response, requestHighlights, matches)
+            },
+            "AlphaScan - Forced Browsing",
+            "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL accessing.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
+            "Tentative",
+            "High"
+        ));
+
+        }
+
+
+        return issues;
+
+    }
+
+
+
+    public ArrayList <IScanIssue > Cookie_Forced_Browsing(IHttpRequestResponse base_pair, String cookieHeader) {
+        ArrayList < IScanIssue > issues = new ArrayList < > ();
+
+        Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
             List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
             int bodyOffset = helper.analyzeRequest(base_pair.getRequest()).getBodyOffset();
             byte[] request = base_pair.getRequest();
@@ -123,10 +199,11 @@ public class RequestIssues implements IScannerCheck {
             ));
 
             }
-        }
-        return issues;
-    }
 
+
+        return issues;
+
+    }
 
 
     private ArrayList < IScanIssue > Check_XML_ContentType(IHttpRequestResponse base_pair) {

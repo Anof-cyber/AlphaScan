@@ -44,6 +44,7 @@ public class Sessionvalidation {
             case HEADER:
                 // Handle authentication using headers
                 // handleHeaderAuthentication(messages);
+                
                 validate_token(messages);
                 
                 break;
@@ -135,10 +136,10 @@ public class Sessionvalidation {
                         Short modified_status_code = helpers.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
                         if (status_code == modified_status_code) {
 
-                            callbacks.issueAlert("The" + authHeader + "header is not not used for auth");
+                            callbacks.issueAlert("The" + authHeader + " header is not not used for auth");
                         }
                         else {
-                            callbacks.issueAlert(authHeader + "Header is used for auth");
+                            callbacks.issueAlert(authHeader + " Header is used for auth");
                             List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helpers);
                             List < int[] > matches2 = matchChecker.getMatches(modifiedMessage.getRequest(), helpers.stringToBytes(header), helpers);
                             Config.setConfigValue("AuthHeader", header);
