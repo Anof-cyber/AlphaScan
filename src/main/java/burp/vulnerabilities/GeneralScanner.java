@@ -31,7 +31,7 @@ public class GeneralScanner implements IScannerCheck {
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         callbacks.printOutput("Passive Scanner");
-        issues.addAll(errorMessage.Check_Errors(baseRequestResponse));
+        issues.addAll(errorMessage.Check_Errors(baseRequestResponse,callbacks,helper));
         
 
         return issues;

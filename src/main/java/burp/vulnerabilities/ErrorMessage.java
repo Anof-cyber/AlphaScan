@@ -12,12 +12,10 @@ import burp.utility.RaiseVuln;
 
 public class ErrorMessage {
 
-    private IBurpExtenderCallbacks callbacks;
-    private IExtensionHelpers helper;
 
 
 
-    public ArrayList < IScanIssue > Check_Errors(IHttpRequestResponse base_pair) {
+    public ArrayList < IScanIssue > Check_Errors(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
 
         callbacks.printOutput("Checking matches is empty");
         callbacks.printOutput(helper.bytesToString(base_pair.getRequest()));
