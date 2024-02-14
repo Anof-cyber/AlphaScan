@@ -2,6 +2,7 @@ package burp.vulnerabilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.*;
 
 import burp.IBurpExtenderCallbacks;
 import burp.IExtensionHelpers;
@@ -17,10 +18,9 @@ public class JWTEXpired {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         byte[] request = base_pair.getRequest();
-        String regex = "[a-zA-Z0-9-_=]+\\.[a-zA-Z0-9-_=]+\\.[a-zA-Z0-9-_=]+";
-
-        String jwtToken = findJWTToken(request, regex);
-        callbacks.printOutput(jwtToken);
+        
+        List<String> jwtTokens = extractJWTTokens(request);
+        callbacks.printOutput(String.join(",", jwtTokens));
        
 
 
@@ -32,15 +32,19 @@ public class JWTEXpired {
     }
 
 
-    public static String findJWTToken(byte[] request, String regex) {
-        List<int[]> matches = MatchChecker.getMatches_regex(request, regex);
+    public static List<String> extractJWTTokens(byte[] request) {
+        List<String> jwtTokens = new ArrayList<>();
+        final String regex = "^((?:\\.?(?:[A-Za-z0-9-_]+)){3})$";
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        final String requestString = new String(request);
 
-        if (!matches.isEmpty()) {
-            int[] matchIndices = matches.get(0);
-            return new String(request, matchIndices[0], matchIndices[1] - matchIndices[0]);
+        final Matcher matcher = pattern.matcher(requestString);
+
+        while (matcher.find()) {
+            jwtTokens.add(matcher.group(0));
         }
 
-        return null;
+        return jwtTokens;
     }
     
 }
