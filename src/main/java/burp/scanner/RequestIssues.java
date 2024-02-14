@@ -1,9 +1,6 @@
 package burp.scanner;
 
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,21 +8,15 @@ import java.util.Set;
 import burp.IBurpExtenderCallbacks;
 import burp.IExtensionHelpers;
 import burp.IHttpRequestResponse;
-import burp.IRequestInfo;
-import burp.IResponseInfo;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
-import burp.utility.Config;
-import burp.utility.MatchChecker;
-import burp.utility.RaiseVuln;
-import burp.utility.CookieUtils;
+import burp.vulnerabilities.ForcedBrowsing;
+import burp.vulnerabilities.XMLContentType;;
 
 public class RequestIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
-    private static final List<String> DISALLOWED_EXTENSIONS = Arrays.asList(".js", ".css", ".jpg", ".jpeg", ".png", ".gif", ".svg");
-    private Set<String> scannedHosts = new HashSet<>();
 
 
      public RequestIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
@@ -52,8 +43,8 @@ public class RequestIssues implements IScannerCheck {
         }
 
 
-        issues.addAll(Check_XML_ContentType(baseRequestResponse));
-        issues.addAll(Forced_Browsing(baseRequestResponse, insertionPoint));
+        issues.addAll(XMLContentType.Check_XML_ContentType(baseRequestResponse,callbacks,helper));
+        issues.addAll(ForcedBrowsing.forced_browsing(baseRequestResponse,callbacks,helper));
         scannedUrls.add(url);
 
         return issues;
@@ -69,240 +60,6 @@ public class RequestIssues implements IScannerCheck {
         } else {
             return 0;
         }
-    }
-
-    // Forced Browsing is experimental, High chances of false positive
-    private ArrayList < IScanIssue > Forced_Browsing(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint) {
-
-        ArrayList < IScanIssue > issues = new ArrayList < > ();
-
-        String cookieHeader = Config.getConfigValue("CookieHeader");
-        String authHeader = Config.getConfigValue("AuthHeader");
-        if (cookieHeader != null) {
-            issues.addAll(Cookie_Forced_Browsing(base_pair,cookieHeader));
-        }
-        else if (authHeader != null) {
-            issues.addAll(Token_Forced_Browsing(base_pair,authHeader));
-        }
-        return issues;
-    }
-
-    public ArrayList <IScanIssue > Token_Forced_Browsing(IHttpRequestResponse base_pair, String authHeader) {
-        ArrayList < IScanIssue > issues = new ArrayList < > ();
-        Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
-        List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
-        int bodyOffset = helper.analyzeRequest(base_pair.getRequest()).getBodyOffset();
-        byte[] request = base_pair.getRequest();
-        String request_string = helper.bytesToString(request);
-        String request_body = request_string.substring(bodyOffset);
-        URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
-        String headerNameAuthHeader = authHeader.split(":")[0].trim();
-        List<String> duplicate_headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
-        boolean headerExists = false;
-        
-
-        if (isStaticResource(requestUrl)) {
-            return issues;
-        }
-
-        if (!orignal_status.equals((short) 200) && !orignal_status.equals((short) 201)) {
-            return issues;
-        }
-
-        for (String header : headers) {
-            if (header.trim().toLowerCase().startsWith(headerNameAuthHeader.toLowerCase() + ":")) {
-                
-                headerExists = true;
-                duplicate_headers.remove(header);
-                break; 
-            }
-        }
-
-        if (!headerExists) {
-            return issues;
-        }
-
-        duplicate_headers.add("Scanner: AlphaScan");
-        byte[] modifiedRequest = helper.buildHttpMessage(duplicate_headers, helper.stringToBytes(request_body));
-        IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(base_pair.getHttpService(), modifiedRequest);
-        Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
-
-        if (orignal_status.equals(modified_status_code)) {
-            MatchChecker matchChecker = new MatchChecker(helper);
-            List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helper);
-                            
-
-            issues.add(new RaiseVuln(
-            base_pair.getHttpService(),
-            callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
-            new IHttpRequestResponse[] {
-                base_pair,
-                callbacks.applyMarkers(modifiedMessage, null, matches)
-            },
-            "AlphaScan - Forced Browsing",
-            "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL accessing.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
-            "Tentative",
-            "High"
-        ));
-
-        }
-
-
-        return issues;
-
-    }
-
-
-
-    public ArrayList <IScanIssue > Cookie_Forced_Browsing(IHttpRequestResponse base_pair, String cookieHeader) {
-        ArrayList < IScanIssue > issues = new ArrayList < > ();
-
-        Short orignal_status = helper.analyzeResponse(base_pair.getResponse()).getStatusCode();
-            List<String> headers = helper.analyzeRequest(base_pair.getRequest()).getHeaders();
-            int bodyOffset = helper.analyzeRequest(base_pair.getRequest()).getBodyOffset();
-            byte[] request = base_pair.getRequest();
-            String request_string = helper.bytesToString(request);
-            String request_body = request_string.substring(bodyOffset);
-            URL requestUrl = helper.analyzeRequest(base_pair).getUrl();
-            
-
-
-            if (isStaticResource(requestUrl)) {
-                return issues;
-            }
-            if (!orignal_status.equals((short) 200) && !orignal_status.equals((short) 201)) {
-                return issues;
-            }
-
-            List<String> updated_headers = CookieUtils.areAllCookiesPresent(cookieHeader, headers);
-
-            if (updated_headers.isEmpty()) {
-                return issues;
-            }
-
-            //headers.removeIf(header -> header.toLowerCase().startsWith("cookie:"));
-            updated_headers.add("Scanner: AlphaScan");
-
-            byte[] modifiedRequest = helper.buildHttpMessage(updated_headers, helper.stringToBytes(request_body));
-            IHttpRequestResponse modifiedMessage = callbacks.makeHttpRequest(base_pair.getHttpService(), modifiedRequest);
-            Short modified_status_code = helper.analyzeResponse(modifiedMessage.getResponse()).getStatusCode();
-
-            if (orignal_status.equals(modified_status_code)) {
-
-                MatchChecker matchChecker = new MatchChecker(helper);
-                List < int[] > matches = matchChecker.getMatches(modifiedMessage.getResponse(), modified_status_code.toString().getBytes(StandardCharsets.UTF_8), helper);
-
-                issues.add(new RaiseVuln(
-                base_pair.getHttpService(),
-                callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
-                new IHttpRequestResponse[] {
-                    base_pair,
-                    callbacks.applyMarkers(modifiedMessage, null, matches)
-                },
-                "AlphaScan - Forced Browsing",
-                "The application is vulnerable to Forced Browsing, allowing unauthorized access to sensitive resources. Forced Browsing occurs when an attacker navigates to URLs or directories that are not intended to be directly accessible, potentially revealing sensitive information or functionality. This vulnerability was detected during an assessment, revealing unauthorized access to sensitive resources via forced URL accessing.<br><br>The vulnerability was further confirmed by AlphaScan, which sent the updated request without session identifier and observed the same response both with and without session, indicating the absence of proper access controls.<br><br>This issue is prone to false positives, and manual verification is required.",
-                "Tentative",
-                "High"
-            ));
-
-            }
-
-
-        return issues;
-
-    }
-
-
-    private ArrayList < IScanIssue > Check_XML_ContentType(IHttpRequestResponse base_pair) {
-        ArrayList < IScanIssue > issues = new ArrayList < > ();
-        boolean foundContentType = false;
-
-        IRequestInfo analysis_request = helper.analyzeRequest(base_pair);
-        IResponseInfo analysis_response = helper.analyzeResponse(base_pair.getResponse());
-        List < String > list_of_headers = analysis_request.getHeaders();
-
-        int request_body_offset = analysis_request.getBodyOffset();
-        byte[] request = base_pair.getRequest();
-        String request_string = helper.bytesToString(request);
-        String request_body = request_string.substring(request_body_offset);
-
-        List < String > updated_headers = new ArrayList < > ();
-
-        for (String header: list_of_headers) {
-            if (header.toLowerCase().startsWith("content-type")) {
-                updated_headers.add("Content-Type: application/xml");
-                foundContentType = true;
-
-            } else {
-                updated_headers.add(header);
-            }
-        }
-        if (!foundContentType) {
-
-            return issues;
-        }
-
-        byte[] updated_http_request = helper.buildHttpMessage(updated_headers, helper.stringToBytes(request_body));
-
-        IHttpRequestResponse updated_request_response = callbacks.makeHttpRequest(base_pair.getHttpService(), updated_http_request);
-
-        IResponseInfo updated_analysis_response = helper.analyzeResponse(updated_request_response.getResponse());
-
-        short updated_status_code = updated_analysis_response.getStatusCode();
-
-        if (updated_status_code == analysis_response.getStatusCode()) {
-
-            //MatchChecker matchChecker = new MatchChecker();
-            MatchChecker matchChecker = new MatchChecker(helper);
-            List < int[] > matches = matchChecker.getMatches(updated_request_response.getRequest(), helper.stringToBytes("Content-Type: application/xml"), helper);
-
-
-            byte[] updated_response = updated_request_response.getResponse();
-            int bodyOffset = updated_analysis_response.getBodyOffset();
-            String updated_response_body = helper.bytesToString(updated_response).substring(bodyOffset);
-
-            byte[] orignal_response = base_pair.getResponse();
-
-            int orignal_response_body_offset = analysis_response.getBodyOffset();
-
-            String original_response_body = helper.bytesToString(orignal_response).substring(orignal_response_body_offset);
-
-            if (updated_response_body.length() == original_response_body.length()) {
-                String vulnerability_description = "The server acknowledges support for 'application/xml' content type in the HTTP request. This indicates that the server is potentially capable of processing XML-formatted requests. Supporting 'application/xml' content type suggests that the server may interpret XML data in requests.";
-
-                issues.add(new RaiseVuln(
-                    base_pair.getHttpService(),
-                    callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
-                    new IHttpRequestResponse[] {
-                        base_pair,
-                        callbacks.applyMarkers(updated_request_response, matches, null)
-                    },
-                    "AlphaScan - XML Content Type Supported",
-                    vulnerability_description,
-                    "Tentative",
-                    "Information"
-                ));
-
-            }
-
-        }
-
-        return issues;
-
-    }
-
-    public boolean isStaticResource(URL requestUrl) {
-        // Check if the request URL contains any disallowed file extension
-        String path = requestUrl.getPath();
-        for (String extension : DISALLOWED_EXTENSIONS) {
-            if (path.toLowerCase().endsWith(extension)) {
-                return true; // Request is for a static resource
-            }
-        }
-        return false; // Request is not for a static resource
-    }
-
-    
-    
+    }    
 
 }
