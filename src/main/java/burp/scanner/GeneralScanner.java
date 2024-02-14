@@ -10,6 +10,7 @@ import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
 import burp.vulnerabilities.ErrorMessage;
+import burp.vulnerabilities.JWTEXpired;
 import burp.vulnerabilities.JsonCSRF;
 
 public class GeneralScanner implements IScannerCheck {
@@ -33,6 +34,7 @@ public class GeneralScanner implements IScannerCheck {
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         issues.addAll(errorMessage.Check_Errors(baseRequestResponse,callbacks,helper));
+        issues.addAll(JWTEXpired.Check_JWT_EXPIRY(baseRequestResponse, callbacks, helper));
         
 
         return issues;
