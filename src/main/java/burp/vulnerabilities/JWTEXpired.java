@@ -19,7 +19,7 @@ public class JWTEXpired {
 
         String request = helper.bytesToString(base_pair.getRequest());
 
-        Pattern pattern = Pattern.compile("\\.([\\w-]+)\\.");
+        Pattern pattern = Pattern.compile("^((?:\\\\.?(?:[A-Za-z0-9-_]+)){3})$");
         Matcher matcher = pattern.matcher(request);
 
         List<String> jwtTokens = new ArrayList<>();
