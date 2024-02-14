@@ -26,7 +26,7 @@ public class JWTEXpired {
 
         // Find JWT tokens in the request
         while (matcher.find()) {
-            jwtTokens.add(matcher.group(1));
+            jwtTokens.add(matcher.group());
         }
     
         for (String token : jwtTokens) {
