@@ -93,17 +93,12 @@ public class JWTEXpired {
 
 
     public static boolean hasExpiry(String jwtToken) {
-    try {
-        DecodedJWT jwt = JWT.decode(jwtToken);
-        Date expiryDate = jwt.getExpiresAt();
-        if (expiryDate != null && expiryDate.before(new Date())) {
-            return true; // Token is expired
-        } else {
-            return false; // Token is not expired or doesn't have expiry set
+        try {
+            DecodedJWT jwt = JWT.decode(jwtToken);
+            return jwt.getExpiresAt() != null;
+        } catch (JWTDecodeException e) {
+            return false; // Error decoding token or invalid token
         }
-    } catch (JWTDecodeException e) {
-        return false; // Error decoding token or invalid token
-    }
     }
 
     public static JwtInfo decodeJwt(String jwtToken) {
