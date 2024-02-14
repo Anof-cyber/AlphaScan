@@ -1,6 +1,7 @@
 # AlphaScan
 A BurpSuite extension for vulnerability Scanning
 
+[![Java Build](https://github.com/Anof-cyber/AlphaScan/actions/workflows/maven.yml/badge.svg)](https://github.com/Anof-cyber/AlphaScan/actions/workflows/maven.yml)
 
 ### 🚧 Under Development 🚧
 

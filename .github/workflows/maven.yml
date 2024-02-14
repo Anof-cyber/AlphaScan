@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java Bild
 
 on:
   push:
