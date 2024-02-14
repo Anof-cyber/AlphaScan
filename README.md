@@ -32,6 +32,7 @@ This project is currently under active development. Not all features are impleme
 | Session Identifier (Secure Flag) | Only Available if Session Identifier is found|
 | Error Messages| Passive Scanner for Error message or Server Banner|
 | JSON CSRF| Check for Content type text and No Additional headers like bearer|
+| JWT Token Expiry | |
 
 <br>
 
