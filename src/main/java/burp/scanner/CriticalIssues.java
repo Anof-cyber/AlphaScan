@@ -33,10 +33,6 @@ public class CriticalIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
 
-    AWSSSRF awsssrf = new AWSSSRF();
-    SQLijection sqlinjection = new SQLijection();
-   
-
     public CriticalIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         this.callbacks = callbacks;
         this.helper = helper;
@@ -59,9 +55,9 @@ public class CriticalIssues implements IScannerCheck {
             issues.addAll(ReflectedXSS(baseRequestResponse, insertionPoint, seleniumHandler));
         };
         
-        issues.addAll(awsssrf.AWS_SSRF(baseRequestResponse,insertionPoint,callbacks,helper));
-        issues.addAll(sqlinjection.TimeSQL(baseRequestResponse, insertionPoint,callbacks,helper));
-        issues.addAll(sqlinjection.ErrorSQLInjection(baseRequestResponse, insertionPoint,callbacks,helper));
+        issues.addAll(AWSSSRF.AWS_SSRF(baseRequestResponse,insertionPoint,callbacks,helper));
+        issues.addAll(SQLijection.TimeSQL(baseRequestResponse, insertionPoint,callbacks,helper));
+        issues.addAll(SQLijection.ErrorSQLInjection(baseRequestResponse, insertionPoint,callbacks,helper));
         
         return issues;
     }

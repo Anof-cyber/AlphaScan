@@ -15,7 +15,7 @@ public class ErrorMessage {
 
 
 
-    public ArrayList < IScanIssue > Check_Errors(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+    public static ArrayList < IScanIssue > Check_Errors(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
 
 
         ArrayList < IScanIssue > issues = new ArrayList < > ();

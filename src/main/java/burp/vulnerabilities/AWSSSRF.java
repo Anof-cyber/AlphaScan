@@ -15,7 +15,7 @@ import burp.utility.RaiseVuln;
 public class AWSSSRF {
 
 
-     public ArrayList < IScanIssue > AWS_SSRF(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+     public static ArrayList < IScanIssue > AWS_SSRF(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
 
 
           ArrayList < IScanIssue > issues = new ArrayList < > ();

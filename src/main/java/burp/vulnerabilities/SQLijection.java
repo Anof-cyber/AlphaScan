@@ -16,7 +16,7 @@ import burp.utility.TimeUtility;
 public class SQLijection {
 
 
-    public ArrayList < IScanIssue > TimeSQL(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+    public static ArrayList < IScanIssue > TimeSQL(IHttpRequestResponse base_pair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         double original_response_time = TimeUtility.validateTime(base_pair,callbacks);
@@ -81,7 +81,7 @@ public class SQLijection {
 
 
 
-    public ArrayList < IScanIssue > ErrorSQLInjection(IHttpRequestResponse basePair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+    public static ArrayList < IScanIssue > ErrorSQLInjection(IHttpRequestResponse basePair, IScannerInsertionPoint insertionPoint, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
     
         ArrayList<IScanIssue> issues = new ArrayList<>();
         String[] payloads = FIleHandler.readPayloadsFromFile("payloads/error_sql.txt"); 

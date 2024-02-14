@@ -21,7 +21,7 @@ public class JsonCSRF {
     private static final List<String> IGNORE_HEADER = Arrays.asList("API","Authorization","X-Api-Key","CSRF","X-CSRF-TOKEN","XSRF-TOKEN");
 
 
-    public ArrayList < IScanIssue > Check_JSON_CSRF(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
+    public static ArrayList < IScanIssue > Check_JSON_CSRF(IHttpRequestResponse base_pair, IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
 
         byte content_type = helper.analyzeRequest(base_pair).getContentType();
@@ -81,7 +81,7 @@ public class JsonCSRF {
 
 
 
-    private List<String> updateContentTypeHeader(List<String> headers) {
+    public static List<String> updateContentTypeHeader(List<String> headers) {
         List<String> updatedHeaders = new ArrayList<>(headers);
 
         // iterate through the headers
@@ -98,7 +98,7 @@ public class JsonCSRF {
         return updatedHeaders;
     }
 
-    private boolean hasIgnoredHeaders(List<String> headers) {
+    public static boolean hasIgnoredHeaders(List<String> headers) {
         return headers.stream()
                 .map(header -> header.split(":")[0]) // Extract header name
                 .anyMatch(headerName -> IGNORE_HEADER.stream().anyMatch(headerName::startsWith));
