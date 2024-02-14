@@ -4,13 +4,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import burp.scanner.CriticalIssues;
+import burp.scanner.GeneralScanner;
+import burp.scanner.HostIssues;
+import burp.scanner.RequestIssues;
 import burp.utility.Config;
 import burp.utility.CookieUtils;
-import burp.vulnerabilities.CriticalIssues;
-import burp.vulnerabilities.HostIssues;
-import burp.vulnerabilities.RequestIssues;
-import burp.vulnerabilities.GeneralScanner;
-//import burp.vulnerabilities.SSTI;
 
 /**
  *

@@ -45,4 +45,4 @@ manifest.mf
 
 ### Temp SSTI removed
 src/main/java/burp/utility/SSTIInjectionPatterns.java
-src/main/java/burp/vulnerabilities/SSTI.java
+src/main/java/burp/scanner/SSTI.java

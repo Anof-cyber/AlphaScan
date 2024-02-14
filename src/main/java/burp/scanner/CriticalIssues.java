@@ -1,4 +1,4 @@
-package burp.vulnerabilities;
+package burp.scanner;
 
 import java.io.BufferedReader;
 import java.io.IOException;

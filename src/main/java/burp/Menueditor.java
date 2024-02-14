@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import burp.vulnerabilities.Sessionvalidation;
+
+import burp.scanner.Sessionvalidation;
 
 public class Menueditor implements IContextMenuFactory {
     private IExtensionHelpers helpers;

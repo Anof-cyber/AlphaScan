@@ -1,4 +1,4 @@
-package burp.vulnerabilities;
+package burp.scanner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,8 @@ import burp.IHttpRequestResponse;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
+import burp.vulnerabilities.ErrorMessage;
+import burp.vulnerabilities.JsonCSRF;
 
 public class GeneralScanner implements IScannerCheck {
 

@@ -1,4 +1,4 @@
-package burp.vulnerabilities;
+package burp.scanner;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;

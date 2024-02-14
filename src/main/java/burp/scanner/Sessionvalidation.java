@@ -1,4 +1,4 @@
-package burp.vulnerabilities;
+package burp.scanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
