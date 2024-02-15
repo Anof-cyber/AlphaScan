@@ -18,6 +18,7 @@ import burp.vulnerabilities.XMLContentType;;
 public class RequestIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
+    private Set<String> scannedUrls = new HashSet<>();
 
 
      public RequestIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
@@ -37,7 +38,7 @@ public class RequestIssues implements IScannerCheck {
      @Override
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        Set<String> scannedUrls = new HashSet<>();
+        
         String url = helper.analyzeRequest(baseRequestResponse).getUrl().toString();
         if (!scannedUrls.contains(url)) {
             issues.addAll(XMLContentType.Check_XML_ContentType(baseRequestResponse,callbacks,helper));
@@ -57,7 +58,7 @@ public class RequestIssues implements IScannerCheck {
     public int consolidateDuplicateIssues(IScanIssue existingIssue, IScanIssue newIssue) {
 
         if (existingIssue.getIssueName().equals(newIssue.getIssueName())) {
-            return 1;
+            return -1;
 
         } else {
             return 0;
