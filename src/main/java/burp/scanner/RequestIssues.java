@@ -39,15 +39,15 @@ public class RequestIssues implements IScannerCheck {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         Set<String> scannedUrls = new HashSet<>();
         String url = helper.analyzeRequest(baseRequestResponse).getUrl().toString();
-        if (scannedUrls.contains(url)) {
-            return issues; // Skip scanning if URL has already been scanned
+        if (!scannedUrls.contains(url)) {
+            issues.addAll(XMLContentType.Check_XML_ContentType(baseRequestResponse,callbacks,helper));
+            issues.addAll(ForcedBrowsing.forced_browsing(baseRequestResponse,callbacks,helper));
+            issues.addAll(CORS.Check_CORS(baseRequestResponse, callbacks, helper));
+            scannedUrls.add(url);
         }
 
 
-        issues.addAll(XMLContentType.Check_XML_ContentType(baseRequestResponse,callbacks,helper));
-        issues.addAll(ForcedBrowsing.forced_browsing(baseRequestResponse,callbacks,helper));
-        issues.addAll(CORS.Check_CORS(baseRequestResponse, callbacks, helper));
-        scannedUrls.add(url);
+        
 
         return issues;
     }
