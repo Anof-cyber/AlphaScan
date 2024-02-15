@@ -18,7 +18,7 @@ public class CORS {
 
     private static ArrayList<IScanIssue> issues = new ArrayList<>();
 
-    private static String title = "Alpha Scan - Cross Origin Resource Sharing";
+    private static String title = "AlphaScan - Cross Origin Resource Sharing";
     private static String description_Exploitable = "Application Does not validate the Origin and Trust all the user origin Header, It was observed that application trust the User provided Origin: <br><br>";
     private static String description_wild_card = "Application use the wild card for the origin, Application response with <b>*</b>";
     private static String descrption_null = "Application allow the null origin, which could be used to exploit the vulnerability";
