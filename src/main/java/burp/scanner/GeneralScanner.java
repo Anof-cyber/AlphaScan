@@ -43,7 +43,6 @@ public class GeneralScanner implements IScannerCheck {
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         issues.addAll(JsonCSRF.Check_JSON_CSRF(baseRequestResponse,callbacks,helper));
-        issues.addAll(CORS.Check_CORS(baseRequestResponse, callbacks, helper));
         return issues;
     }
 

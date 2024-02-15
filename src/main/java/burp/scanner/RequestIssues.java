@@ -11,6 +11,7 @@ import burp.IHttpRequestResponse;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
+import burp.vulnerabilities.CORS;
 import burp.vulnerabilities.ForcedBrowsing;
 import burp.vulnerabilities.XMLContentType;;
 
@@ -45,6 +46,7 @@ public class RequestIssues implements IScannerCheck {
 
         issues.addAll(XMLContentType.Check_XML_ContentType(baseRequestResponse,callbacks,helper));
         issues.addAll(ForcedBrowsing.forced_browsing(baseRequestResponse,callbacks,helper));
+        issues.addAll(CORS.Check_CORS(baseRequestResponse, callbacks, helper));
         scannedUrls.add(url);
 
         return issues;
