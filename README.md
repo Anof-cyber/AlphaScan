@@ -20,20 +20,21 @@ This project is currently under active development. Not all features are impleme
 | AWS SSRF                       | [Payloads](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md#ssrf-url-for-cloud-instances)                        |
 | Reflected XSS                  | [Payloads](https://github.com/Proviesec/xss-payload-list/tree/main)                                                |
 | Error Based SQL injection      | [Payload-src-github](https://github.com/payloadbox/sql-injection-payload-list) ([Payload-src-twitter](https://x.com/Fabrikat0r/status/1731784913572200720?)) ([Payload-src-twitter](https://twitter.com/intigriti/status/1727669826338914506)) |
+| Forced Browsing | Experimental, likely to be false positive|
+| JSON CSRF| Check for Content type text and No Additional headers like bearer|
+| JWT Token Expiry | |
+| CORS| Check CORS if not check for Common Bypass |
+| Verify session cookie or token | Not Part of Active or Passive Scan, Need to be validated before starting a scan through right click menu on any request with a valid session (Not expired) |
+| Error Messages and Banner Grab| Passive Scanner for Error message or Server Banner|
 | Missing CSP Header             |                                                                                                                      |
 | CSP Header with Insecure Directives |                                                                                                                  |
 | CSP Header Missing Required Directives |                                                                                                            |
 | Missing X-Frame Header         |                                                                                                                      |
 | Missing HSTS Header            |                                                                                                                      |
-| Check If Request with Body support XML Content Type Header |   Partial/ Could be False Positive, will be updated later                                                                                               |
-| Verify session cookie or token | Not Part of Active or Passive Scan, Need to be validated before starting a scan through right click menu on any request with a valid session (Not expired) |
-| Forced Browsing | Experimental, likely to be false positive|
-| Session Identifier (HTTP Only Flag) | Only Available if Session Identifier is found|
+| Check If Request with Body support XML Content Type Header |   Partial/ Could be False Positive, will be updated later |
+| Session Identifier (HTTP Only Flag) | Only Available if Session Identifier is found |
 | Session Identifier (Secure Flag) | Only Available if Session Identifier is found|
-| Error Messages| Passive Scanner for Error message or Server Banner|
-| JSON CSRF| Check for Content type text and No Additional headers like bearer|
-| JWT Token Expiry | |
-| CORS| Check CORS if not check for Common Bypass |
+
 
 <br>
 
