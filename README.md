@@ -33,6 +33,7 @@ This project is currently under active development. Not all features are impleme
 | Error Messages| Passive Scanner for Error message or Server Banner|
 | JSON CSRF| Check for Content type text and No Additional headers like bearer|
 | JWT Token Expiry | |
+| CORS| Check CORS if not check for Common Bypass |
 
 <br>
 
