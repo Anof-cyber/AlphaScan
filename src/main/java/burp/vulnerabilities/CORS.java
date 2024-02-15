@@ -47,7 +47,7 @@ public class CORS {
         IHttpRequestResponse updated_request_response = callbacks.makeHttpRequest(base_pair.getHttpService(), newRequest);
         String expceted = "Access-Control-Allow-Origin: http://example.com";
 
-        if (hasResponseHeaderWithValue(base_pair,helper, expceted)) {
+        if (hasResponseHeaderWithValue(updated_request_response,helper, expceted)) {
             List<int[]> request_highList = MatchChecker.getMatches_regex(updated_request_response.getRequest(), "Origin: http://example.com");
             List<int[]> response_highlight = MatchChecker.getMatches_regex(updated_request_response.getResponse(), expceted);
 
@@ -68,7 +68,7 @@ public class CORS {
         IHttpRequestResponse updated_request_response_https = callbacks.makeHttpRequest(base_pair.getHttpService(), newRequest_https);
         String expceted_https = "Access-Control-Allow-Origin: https://example.com";
 
-        if (hasResponseHeaderWithValue(base_pair,helper, expceted_https)) {
+        if (hasResponseHeaderWithValue(updated_request_response_https,helper, expceted_https)) {
             List<int[]> request_highList = MatchChecker.getMatches_regex(updated_request_response_https.getRequest(), "Origin: https://example.com");
             List<int[]> response_highlight = MatchChecker.getMatches_regex(updated_request_response_https.getResponse(), expceted_https);
 
