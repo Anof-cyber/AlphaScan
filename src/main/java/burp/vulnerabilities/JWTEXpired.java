@@ -64,7 +64,7 @@ public class JWTEXpired {
                 new IHttpRequestResponse[]{
                     base_pair
                 },
-                "JWT Token Without Expiry",
+                "AlphaScan - JWT Token Without Expiry",
                 "The JWT token used in the request does not have an expiry set. Token: " + token,
                 "Tentative",
                 "Information"
@@ -78,9 +78,9 @@ public class JWTEXpired {
                         base_pair.getHttpService(),
                         callbacks.getHelpers().analyzeRequest(base_pair).getUrl(),
                         new IHttpRequestResponse[]{base_pair},
-                        "JWT Valid for too long",
-                        "The JWT token used in the request does not have an expiry set and its expiry time is more than 1 hour from the issued time. Token: " + token + ", Issued Time: " + jwtInfo.getIssuedAt() + ", Expiry Time: " + jwtInfo.getExpiresAt(),
-                        "Tentative",
+                        "AlphaScan - JWT Valid for too long",
+                        "The JWT token used in the request does not have an expiry set and its expiry time is more than 1 hour from the issued time. Token: <br><br>" + token + "<br><br>Issued Time: " + jwtInfo.getIssuedAt() + "<br><br>Expiry Time: " + jwtInfo.getExpiresAt(),
+                        "Certain",
                         "Information"
                     ));
                 }

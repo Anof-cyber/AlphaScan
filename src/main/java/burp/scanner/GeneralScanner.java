@@ -9,6 +9,7 @@ import burp.IHttpRequestResponse;
 import burp.IScanIssue;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPoint;
+import burp.vulnerabilities.CORS;
 import burp.vulnerabilities.ErrorMessage;
 import burp.vulnerabilities.JWTEXpired;
 import burp.vulnerabilities.JsonCSRF;
@@ -42,6 +43,7 @@ public class GeneralScanner implements IScannerCheck {
     public List < IScanIssue > doActiveScan(IHttpRequestResponse baseRequestResponse, IScannerInsertionPoint insertionPoint) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
         issues.addAll(JsonCSRF.Check_JSON_CSRF(baseRequestResponse,callbacks,helper));
+        issues.addAll(CORS.Check_CORS(baseRequestResponse, callbacks, helper));
         return issues;
     }
 
