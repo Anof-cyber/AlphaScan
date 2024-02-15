@@ -16,6 +16,7 @@ import java.util.HashSet;
 public class HostIssues implements IScannerCheck {
     private IBurpExtenderCallbacks callbacks;
     private IExtensionHelpers helper;
+    private Set<String> scannedhosts = new HashSet<>();
 
     public HostIssues(IBurpExtenderCallbacks callbacks, IExtensionHelpers helper) {
         this.callbacks = callbacks;
@@ -25,7 +26,7 @@ public class HostIssues implements IScannerCheck {
     @Override
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
-        Set<String> scannedhosts = new HashSet<>();
+        
         String host = baseRequestResponse.getHttpService().getHost();
         if (scannedhosts.contains(host)) {
             return issues; // Skip scanning if Host has already been scanned

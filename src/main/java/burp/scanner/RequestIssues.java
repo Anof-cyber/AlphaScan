@@ -30,6 +30,7 @@ public class RequestIssues implements IScannerCheck {
     @Override
     public List < IScanIssue > doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         ArrayList < IScanIssue > issues = new ArrayList < > ();
+        issues.addAll(CORS.Check_wildcard(baseRequestResponse, callbacks, helper));
 
         return issues;
     }
